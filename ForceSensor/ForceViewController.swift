@@ -38,9 +38,14 @@ struct Force {
 class ForceViewController: UIViewController {
     
     var ForceCircle: UIView!
-    fileprivate let duration = 0.36
+    fileprivate var mx : CGFloat = 0
+    fileprivate var my : CGFloat = 0
+
+    var duration = 0.16
     fileprivate let delay = 0
     fileprivate let scale = 1.2
+    fileprivate var Time = Date().timeIntervalSinceReferenceDate
+
     var F_queue: [Force] = [Force(),Force(),Force()]
 
     var centralManager: CBCentralManager!
@@ -52,6 +57,7 @@ class ForceViewController: UIViewController {
     @IBOutlet weak var FzLabel: UILabel!
 
     @IBOutlet weak var Circle: PushButton!
+    @IBOutlet weak var plusSign: UITextField!
     
 
     override func viewDidLoad() {
@@ -59,7 +65,7 @@ class ForceViewController: UIViewController {
         // Do any additional setup after loading the view.
         setupRect()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        Circle.setNeedsDisplay()
+//        Circle.setNeedsDisplay()
     }
     
     fileprivate func setupRect() {
@@ -81,68 +87,18 @@ class ForceViewController: UIViewController {
         })
     }
 
-    fileprivate func curvePath(_ Point1: CGPoint, Point2: CGPoint, endPoint: CGPoint) {
+    fileprivate func curvePath( currPoint: CGPoint, centerPoint: CGPoint, endPoint: CGPoint, nextPoint: CGPoint) {
         let path = UIBezierPath()
-//        path.move(to: self.ForceCircle.center)
+        let alpha: CGFloat = 1.0/3.0
         
-        var alpha: CGFloat = 1.0/3.0
-        var interpolationPoints: [CGPoint] = [self.ForceCircle.center, Point1, Point2, endPoint]
-        guard !interpolationPoints.isEmpty else { return }
-        path.move(to: interpolationPoints[0])
+        path.move(to: self.ForceCircle.center) // = currPoint
         
-        let n = interpolationPoints.count - 1
+        let controlPoint1 = CGPoint(x: currPoint.x - mx * alpha, y: currPoint.y - my * alpha)
+        mx = (centerPoint.x - nextPoint.x) / 2.0
+        my = (centerPoint.y - nextPoint.y) / 2.0
+        let controlPoint2 = CGPoint(x: endPoint.x + mx * alpha, y: endPoint.y + my * alpha)
         
-        for index in 0..<n
-        {
-            var currentPoint = interpolationPoints[index]
-            var nextIndex = (index + 1) % interpolationPoints.count
-            var prevIndex = index == 0 ? interpolationPoints.count - 1 : index - 1
-            var previousPoint = interpolationPoints[prevIndex]
-            var nextPoint = interpolationPoints[nextIndex]
-            let endPoint = nextPoint
-            var mx : CGFloat
-            var my : CGFloat
-            
-            if index > 0
-            {
-                mx = (nextPoint.x - previousPoint.x) / 2.0
-                my = (nextPoint.y - previousPoint.y) / 2.0
-            }
-            else
-            {
-                mx = (nextPoint.x - currentPoint.x) / 2.0
-                my = (nextPoint.y - currentPoint.y) / 2.0
-            }
-            
-            let controlPoint1 = CGPoint(x: currentPoint.x + mx * alpha, y: currentPoint.y + my * alpha)
-            currentPoint = interpolationPoints[nextIndex]
-            nextIndex = (nextIndex + 1) % interpolationPoints.count
-            prevIndex = index
-            previousPoint = interpolationPoints[prevIndex]
-            nextPoint = interpolationPoints[nextIndex]
-            
-            if index < n - 1
-            {
-                mx = (nextPoint.x - previousPoint.x) / 2.0
-                my = (nextPoint.y - previousPoint.y) / 2.0
-            }
-            else
-            {
-                mx = (currentPoint.x - previousPoint.x) / 2.0
-                my = (currentPoint.y - previousPoint.y) / 2.0
-            }
-            
-            let controlPoint2 = CGPoint(x: currentPoint.x - mx * alpha, y: currentPoint.y - my * alpha)
-            
-            path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
-        }
-
-        
-        
-        
-        
-        
-//        path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
         
         // create a new CAKeyframeAnimation that animates the objects position
         let anim = CAKeyframeAnimation(keyPath: "position")
@@ -173,20 +129,27 @@ class ForceViewController: UIViewController {
         F_queue[1] = F_queue[0]
         F_queue[0] = F
         
-        print(F_queue)
-        print("-------")
-        print("-------")
         
-        var controlPoint1 = CGPoint(x: 0, y: 0)
-        controlPoint1.x += CGFloat(F_queue[2].X)
-        controlPoint1.y += CGFloat(F_queue[2].Y)
-        var controlPoint2 = CGPoint(x: 0, y: 0)
-        controlPoint2.x += CGFloat(F_queue[1].X)
-        controlPoint2.y += CGFloat(F_queue[1].Y)
+        let currTime = Date().timeIntervalSinceReferenceDate
+        let dT = currTime - Time
+        Time = currTime
+//        self.duration = dT
+        print(dT)
+        
+        var currentPoint = CGPoint(x: 0, y: 0)
+        currentPoint.x += CGFloat(F_queue[1].prevX)
+        currentPoint.y += CGFloat(F_queue[1].prevY)
+        var centerPoint = CGPoint(x: 0, y: 0)
+        centerPoint.x += CGFloat(F_queue[1].X)
+        centerPoint.y += CGFloat(F_queue[1].Y)
         var endPoint = CGPoint(x: 0, y: 0)
-        endPoint.x += CGFloat(F_queue[0].X)
-        endPoint.y += CGFloat(F_queue[0].Y)
-        curvePath(controlPoint1, Point2: controlPoint2, endPoint: endPoint)
+        endPoint.x += CGFloat(F_queue[0].prevX)
+        endPoint.y += CGFloat(F_queue[0].prevY)
+        var nextPoint = CGPoint(x: 0, y: 0)
+        nextPoint.x += CGFloat(F_queue[0].X)
+        nextPoint.y += CGFloat(F_queue[0].Y)
+        
+        curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
 //        multiPosition(CGPoint(x: CGFloat(F_old.X)/1, y: CGFloat(F_old.Y)/1), CGPoint(x: CGFloat(F.X)/1, y: CGFloat(F.Y)/1) )
 //        F_old = F
     }
