@@ -24,16 +24,25 @@ struct Force {
     var X = 0
     var Y = 0
     var Z = 0
+    
+    init(){
+        self.prevX = 0
+        self.prevY = 0
+        self.prevZ = 0
+        self.X = 0
+        self.Y = 0
+        self.Z = 0
+    }
 }
 
 class ForceViewController: UIViewController {
     
     var ForceCircle: UIView!
-    fileprivate let duration = 0.05
+    fileprivate let duration = 0.36
     fileprivate let delay = 0
     fileprivate let scale = 1.2
-    var F_old = Force(prevX: 0,prevY: 0, prevZ: 0,X: 0,Y: 0,Z: 0)
-    
+    var F_queue: [Force] = [Force(),Force(),Force()]
+
     var centralManager: CBCentralManager!
     var PedalPeripheral: CBPeripheral!
     var i : CGFloat = 0.0
@@ -72,6 +81,82 @@ class ForceViewController: UIViewController {
         })
     }
 
+    fileprivate func curvePath(_ Point1: CGPoint, Point2: CGPoint, endPoint: CGPoint) {
+        let path = UIBezierPath()
+//        path.move(to: self.ForceCircle.center)
+        
+        var alpha: CGFloat = 1.0/3.0
+        var interpolationPoints: [CGPoint] = [self.ForceCircle.center, Point1, Point2, endPoint]
+        guard !interpolationPoints.isEmpty else { return }
+        path.move(to: interpolationPoints[0])
+        
+        let n = interpolationPoints.count - 1
+        
+        for index in 0..<n
+        {
+            var currentPoint = interpolationPoints[index]
+            var nextIndex = (index + 1) % interpolationPoints.count
+            var prevIndex = index == 0 ? interpolationPoints.count - 1 : index - 1
+            var previousPoint = interpolationPoints[prevIndex]
+            var nextPoint = interpolationPoints[nextIndex]
+            let endPoint = nextPoint
+            var mx : CGFloat
+            var my : CGFloat
+            
+            if index > 0
+            {
+                mx = (nextPoint.x - previousPoint.x) / 2.0
+                my = (nextPoint.y - previousPoint.y) / 2.0
+            }
+            else
+            {
+                mx = (nextPoint.x - currentPoint.x) / 2.0
+                my = (nextPoint.y - currentPoint.y) / 2.0
+            }
+            
+            let controlPoint1 = CGPoint(x: currentPoint.x + mx * alpha, y: currentPoint.y + my * alpha)
+            currentPoint = interpolationPoints[nextIndex]
+            nextIndex = (nextIndex + 1) % interpolationPoints.count
+            prevIndex = index
+            previousPoint = interpolationPoints[prevIndex]
+            nextPoint = interpolationPoints[nextIndex]
+            
+            if index < n - 1
+            {
+                mx = (nextPoint.x - previousPoint.x) / 2.0
+                my = (nextPoint.y - previousPoint.y) / 2.0
+            }
+            else
+            {
+                mx = (currentPoint.x - previousPoint.x) / 2.0
+                my = (currentPoint.y - previousPoint.y) / 2.0
+            }
+            
+            let controlPoint2 = CGPoint(x: currentPoint.x - mx * alpha, y: currentPoint.y - my * alpha)
+            
+            path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        }
+
+        
+        
+        
+        
+        
+//        path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        
+        // create a new CAKeyframeAnimation that animates the objects position
+        let anim = CAKeyframeAnimation(keyPath: "position")
+        
+        // set the animations path to our bezier curve
+        anim.path = path.cgPath
+        
+        // set some more parameters for the animation
+        anim.duration = self.duration
+        
+        // add the animation to the squares 'layer' property
+        self.ForceCircle.layer.add(anim, forKey: "animate position along path")
+        self.ForceCircle.center = endPoint
+    }
 
     func onForceMeasurementReceived(_ F: Force) {
         FxLabel.text = String((F.X+F.prevX)/2)
@@ -84,12 +169,26 @@ class ForceViewController: UIViewController {
 ////        print("scaleFactor: \(Circle.scaleFactor)")
 //
 //        Circle.setNeedsDisplay()
-        print(F_old)
-        print(F)
+        F_queue[2] = F_queue[1]
+        F_queue[1] = F_queue[0]
+        F_queue[0] = F
+        
+        print(F_queue)
         print("-------")
         print("-------")
-        multiPosition(CGPoint(x: CGFloat(F_old.X)/1, y: CGFloat(F_old.Y)/1), CGPoint(x: CGFloat(F.X)/1, y: CGFloat(F.Y)/1) )
-        F_old = F
+        
+        var controlPoint1 = CGPoint(x: 0, y: 0)
+        controlPoint1.x += CGFloat(F_queue[2].X)
+        controlPoint1.y += CGFloat(F_queue[2].Y)
+        var controlPoint2 = CGPoint(x: 0, y: 0)
+        controlPoint2.x += CGFloat(F_queue[1].X)
+        controlPoint2.y += CGFloat(F_queue[1].Y)
+        var endPoint = CGPoint(x: 0, y: 0)
+        endPoint.x += CGFloat(F_queue[0].X)
+        endPoint.y += CGFloat(F_queue[0].Y)
+        curvePath(controlPoint1, Point2: controlPoint2, endPoint: endPoint)
+//        multiPosition(CGPoint(x: CGFloat(F_old.X)/1, y: CGFloat(F_old.Y)/1), CGPoint(x: CGFloat(F.X)/1, y: CGFloat(F.Y)/1) )
+//        F_old = F
     }
 
 
@@ -169,7 +268,7 @@ extension ForceViewController: CBPeripheralDelegate {
 
     
     private func ForceMeasurementConversion(from characteristic: CBCharacteristic) -> Force {
-        guard let characteristicData = characteristic.value else { return Force(prevX: 0,prevY: 0,prevZ: 0,X: 0,Y: 0,Z: 0) }
+        guard let characteristicData = characteristic.value else { return Force() }
         var F = Force()
         let byteArray = [UInt8](characteristicData)
 
@@ -206,4 +305,64 @@ extension ForceViewController: CBPeripheralDelegate {
         return F
     }
     
+}
+
+
+
+
+
+extension UIBezierPath
+{
+    func interpolatePointsWithHermite(interpolationPoints : [CGPoint], alpha: CGFloat = 1.0/3.0)
+    {
+        guard !interpolationPoints.isEmpty else { return }
+        self.move(to: interpolationPoints[0])
+        
+        let n = interpolationPoints.count - 1
+        
+        for index in 0..<n
+        {
+            var currentPoint = interpolationPoints[index]
+            var nextIndex = (index + 1) % interpolationPoints.count
+            var prevIndex = index == 0 ? interpolationPoints.count - 1 : index - 1
+            var previousPoint = interpolationPoints[prevIndex]
+            var nextPoint = interpolationPoints[nextIndex]
+            let endPoint = nextPoint
+            var mx : CGFloat
+            var my : CGFloat
+            
+            if index > 0
+            {
+                mx = (nextPoint.x - previousPoint.x) / 2.0
+                my = (nextPoint.y - previousPoint.y) / 2.0
+            }
+            else
+            {
+                mx = (nextPoint.x - currentPoint.x) / 2.0
+                my = (nextPoint.y - currentPoint.y) / 2.0
+            }
+            
+            let controlPoint1 = CGPoint(x: currentPoint.x + mx * alpha, y: currentPoint.y + my * alpha)
+            currentPoint = interpolationPoints[nextIndex]
+            nextIndex = (nextIndex + 1) % interpolationPoints.count
+            prevIndex = index
+            previousPoint = interpolationPoints[prevIndex]
+            nextPoint = interpolationPoints[nextIndex]
+            
+            if index < n - 1
+            {
+                mx = (nextPoint.x - previousPoint.x) / 2.0
+                my = (nextPoint.y - previousPoint.y) / 2.0
+            }
+            else
+            {
+                mx = (currentPoint.x - previousPoint.x) / 2.0
+                my = (currentPoint.y - previousPoint.y) / 2.0
+            }
+            
+            let controlPoint2 = CGPoint(x: currentPoint.x - mx * alpha, y: currentPoint.y - my * alpha)
+            
+            self.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        }
+    }
 }
