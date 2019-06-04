@@ -66,13 +66,22 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UEF-ra-X9Y" customClass="PushButton" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="172" y="509" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="+" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YhO-6M-dsm">
-                                <rect key="frame" x="139" y="407" width="97" height="52"/>
+                                <rect key="frame" x="139" y="416" width="97" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzl-gK-LIq" customClass="ForceAnimationCircle" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="172" y="299" width="64" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <accessibility key="accessibilityConfiguration">
@@ -81,6 +90,8 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="Circle" destination="UEF-ra-X9Y" id="pLG-rW-rqL"/>
+                        <outlet property="FC" destination="hzl-gK-LIq" id="tv7-D4-H3p"/>
                         <outlet property="FxLabel" destination="DkL-71-W1m" id="xqO-HU-oTD"/>
                         <outlet property="FyLabel" destination="RRy-mP-4ce" id="jjP-yw-4y3"/>
                         <outlet property="FzLabel" destination="FfR-Jm-Smb" id="vam-Be-XkS"/>
