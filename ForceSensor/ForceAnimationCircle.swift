@@ -16,7 +16,7 @@ class ForceAnimationCircle: UIView {
     
     let maxFZ = CGFloat(-100)
     let maxFXY = CGFloat(128)
-    let duration = 0.16
+    let duration = 1.0
 
 
     private var size: CGFloat
@@ -38,7 +38,6 @@ class ForceAnimationCircle: UIView {
         self.FXY_max = maxFXY
         self.FZ_max = maxFZ
         self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: self.size, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
-
         
         super.init(coder: aDecoder)
 
@@ -104,7 +103,8 @@ class ForceAnimationCircle: UIView {
         nextPoint.x += CGFloat(F_queue[0].X)
         nextPoint.y += CGFloat(-F_queue[0].Y)
         
-        curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
+//        curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
+        moveCircle(endPoint: nextPoint)
         
         let currScale = CGFloat(F_queue[0].Z)/maxFZ
         changeCircleColor(currScale: currScale)
@@ -115,6 +115,16 @@ class ForceAnimationCircle: UIView {
     fileprivate func changeCircleSize(currSize: CGFloat){
         self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: currSize, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
         self.shapeLayer.path = circlePath.cgPath
+        
+        let animation = CABasicAnimation(keyPath: "path")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation.duration = self.duration
+        animation.toValue = circlePath.cgPath
+        animation.fillMode = CAMediaTimingFillMode.forwards
+        animation.isRemovedOnCompletion = false
+        
+        self.shapeLayer.add(animation, forKey:"")
+        
         self.size = currSize;
     }
     
@@ -125,8 +135,25 @@ class ForceAnimationCircle: UIView {
         } else if(currScale > 0){
             currColor = UIColor(displayP3Red: currScale, green: 1.0-currScale, blue: 0.3, alpha: 1.0)}
         
-        self.shapeLayer.fillColor = currColor.cgColor;
-        self.shapeLayer.strokeColor = currColor.cgColor
+        let animation = CABasicAnimation(keyPath: "fillColor")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation.duration = self.duration
+        animation.toValue = currColor.cgColor
+        animation.fillMode = CAMediaTimingFillMode.forwards
+        animation.isRemovedOnCompletion = false
+        self.shapeLayer.add(animation, forKey:"")
+        
+        let animation1 = CABasicAnimation(keyPath: "strokeColor")
+        animation1.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation1.duration = self.duration
+        animation1.toValue = currColor.cgColor
+        animation1.fillMode = CAMediaTimingFillMode.forwards
+        animation1.isRemovedOnCompletion = false
+        self.shapeLayer.add(animation1, forKey:"")
+
+
+//        self.shapeLayer.fillColor = currColor.cgColor;
+//        self.shapeLayer.strokeColor = currColor.cgColor
         self.color = currColor
     }
     
@@ -150,8 +177,22 @@ class ForceAnimationCircle: UIView {
         // set some more parameters for the animation
         anim.duration = self.duration
         anim.isRemovedOnCompletion = false
+        anim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+
         // add the animation to the squares 'layer' property
         self.shapeLayer.add(anim, forKey: "animate position along path")
         self.shapeLayer.position = endPoint
+    }
+    
+    func moveCircle(endPoint: CGPoint){
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation.duration = self.duration
+        animation.toValue = endPoint
+        animation.fillMode = CAMediaTimingFillMode.forwards
+        animation.isRemovedOnCompletion = false
+        
+        self.shapeLayer.add(animation, forKey:"")
     }
 }

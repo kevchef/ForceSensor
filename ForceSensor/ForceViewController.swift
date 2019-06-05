@@ -37,7 +37,8 @@ class ForceViewController: UIViewController {
     @IBOutlet weak var FxLabel: UILabel!
     @IBOutlet weak var FyLabel: UILabel!
     @IBOutlet weak var FzLabel: UILabel!
-
+    
+//    @IBOutlet weak var Test: TestCircle!
     @IBOutlet weak var FC: ForceAnimationCircle!
     @IBOutlet weak var RecordButton: RecordButton!
     
@@ -45,6 +46,7 @@ class ForceViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         centralManager = CBCentralManager(delegate: self, queue: nil)
+//        Test.animate()
     }
     
     func onForceMeasurementReceived(_ F: Force) {

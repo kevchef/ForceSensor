@@ -144,7 +144,7 @@ class RecordButton: UIButton {
         //always draw the outer ring, the inner control is drawn during the animations
         let outerRing = UIBezierPath(ovalIn: CGRect(x:3, y:3, width:60, height:60))
         outerRing.lineWidth = 6
-        UIColor.white.setStroke()
+        UIColor.black.setStroke()
         outerRing.stroke()
     }
     
@@ -155,10 +155,12 @@ class RecordButton: UIButton {
         if (self.isSelected)
         {
             returnPath = self.innerSquarePath()
+            print("record data")
         }
         else
         {
             returnPath = self.innerCirclePath()
+            print("stop recording")
         }
         
         return returnPath
