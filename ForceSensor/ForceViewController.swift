@@ -33,6 +33,7 @@ class ForceViewController: UIViewController {
     var centralManager: CBCentralManager!
     var PedalPeripheral: CBPeripheral!
     var i : CGFloat = 0.0
+    var writeToCSV = false
 
     @IBOutlet weak var FxLabel: UILabel!
     @IBOutlet weak var FyLabel: UILabel!
@@ -60,6 +61,21 @@ class ForceViewController: UIViewController {
         
         FC.AnimateCircle(F_queue: F_queue)
     }
+    
+    @IBAction func switchRecording(_ sender: Any) {
+        if( writeToCSV == false ){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "EnterFilename")
+//            EnterFilenameViewController()
+            vc.modalPresentationStyle = .overCurrentContext
+            vc.modalTransitionStyle = .crossDissolve
+            present(vc, animated: true, completion: nil)
+                        
+            writeToCSV = false
+            print(writeToCSV)
+        }
+    }
+    
 }
 
 // extension to ForceViewController - CBCentralMangerDelegate
@@ -93,8 +109,6 @@ extension ForceViewController: CBCentralManagerDelegate {
         centralManager.stopScan()
         centralManager.connect(PedalPeripheral, options: nil)
     }
-    
-    
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to Peripheral")
