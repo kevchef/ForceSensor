@@ -14,9 +14,9 @@ class ForceAnimationCircle: UIView {
     let initFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 6.0, height: UIScreen.main.bounds.width / 6.0)
     let generalCenter = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY + 100)
     
-    let maxFZ = CGFloat(300)
+    let maxFZ = CGFloat(-100)
     let maxFXY = CGFloat(128)
-    let duration = 0.16
+    let duration = 0.01
 
 
     private var size: CGFloat
@@ -44,52 +44,96 @@ class ForceAnimationCircle: UIView {
 
         frame = CGRect(x: generalCenter.x, y: generalCenter.y, width: 0, height: 0)
         
+        // add circle as shapelayer - sublayer of main layer
         self.shapeLayer.path = self.circlePath.cgPath
-        
         self.shapeLayer.fillColor = UIColor.green.cgColor
         self.shapeLayer.strokeColor = UIColor.green.cgColor
         self.shapeLayer.lineWidth = 3.0
-        
+        self.layer.addSublayer(shapeLayer)
+
+        //add plusSign in the center of the Circle as sublayer of shapeLayer
         let PlusSign = UIBezierPath()
         PlusSign.move(to: CGPoint(x: 0, y: -10))
         PlusSign.addLine(to: CGPoint(x: 0, y: 10))
         PlusSign.move(to: CGPoint(x: -10, y: 0))
         PlusSign.addLine(to: CGPoint(x: 10, y: 0))
         PlusSign.close()
-
-
         let plusLayer = CAShapeLayer()
         plusLayer.path = PlusSign.cgPath
         plusLayer.strokeColor = UIColor.black.cgColor
         plusLayer.lineWidth = 3
-        self.layer.addSublayer(shapeLayer)
-        self.layer.addSublayer(plusLayer)
-
+        self.shapeLayer.addSublayer(plusLayer)
+        
+        //add plusSign in the center as sublayer of main layer
+        let PlusSignCenter = UIBezierPath()
+        PlusSignCenter.move(to: CGPoint(x: 0, y: -10))
+        PlusSignCenter.addLine(to: CGPoint(x: 0, y: 10))
+        PlusSignCenter.move(to: CGPoint(x: -10, y: 0))
+        PlusSignCenter.addLine(to: CGPoint(x: 10, y: 0))
+        PlusSignCenter.close()
+        let plusLayerCenter = CAShapeLayer()
+        plusLayerCenter.path = PlusSign.cgPath
+        plusLayerCenter.strokeColor = UIColor.black.cgColor
+        plusLayerCenter.lineWidth = 3
+        self.layer.addSublayer(plusLayerCenter)
+        
+        let DashedMaxCircle = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: 2*self.initFrame.width, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+        let DashedMaxCircleLayer = CAShapeLayer()
+        DashedMaxCircleLayer.path = DashedMaxCircle.cgPath
+        DashedMaxCircleLayer.strokeColor = UIColor.black.cgColor
+        DashedMaxCircleLayer.fillColor = UIColor.clear.cgColor
+        DashedMaxCircleLayer.lineWidth = 3
+        let DashPattern: [NSNumber]?  = [10,3]
+        DashedMaxCircleLayer.lineDashPattern = DashPattern
+        self.shapeLayer.addSublayer(DashedMaxCircleLayer)
+        
+        
     }
     
     func AnimateCircle(F_queue: [Force]){
-        var currentPoint = generalCenter
+        var currentPoint = CGPoint(x:0, y:0)
         currentPoint.x += CGFloat(F_queue[1].prevX)
-        currentPoint.y += CGFloat(F_queue[1].prevY)
-        var centerPoint = generalCenter
+        currentPoint.y += CGFloat(-F_queue[1].prevY)
+        var centerPoint = CGPoint(x:0, y:0)
         centerPoint.x += CGFloat(F_queue[1].X)
-        centerPoint.y += CGFloat(F_queue[1].Y)
-        var endPoint = generalCenter
+        centerPoint.y += CGFloat(-F_queue[1].Y)
+        var endPoint = CGPoint(x:0, y:0)
         endPoint.x += CGFloat(F_queue[0].prevX)
-        endPoint.y += CGFloat(F_queue[0].prevY)
-        var nextPoint = generalCenter
+        endPoint.y += CGFloat(-F_queue[0].prevY)
+        var nextPoint = CGPoint(x:0, y:0)
         nextPoint.x += CGFloat(F_queue[0].X)
-        nextPoint.y += CGFloat(F_queue[0].Y)
-        
+        nextPoint.y += CGFloat(-F_queue[0].Y)
         
         curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
+        
+        let currScale = CGFloat(F_queue[0].Z)/maxFZ
+        changeCircleColor(currScale: currScale)
+        self.size = (CGFloat(F_queue[0].Z)/maxFZ + 1) * initFrame.width
+        changeCircleSize()
+    }
+    
+    fileprivate func changeCircleSize(){
+        self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: self.size, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+        self.shapeLayer.path = circlePath.cgPath
+    }
+    
+    fileprivate func changeCircleColor(currScale: CGFloat){
+        var currColor = UIColor.green
+        if (currScale > 1){
+            currColor = UIColor.red
+        } else if(currScale > 0){
+            currColor = UIColor(displayP3Red: currScale, green: 1.0-currScale, blue: 0.3, alpha: 1.0)}
+        
+        self.shapeLayer.fillColor = currColor.cgColor;
+        self.shapeLayer.strokeColor = currColor.cgColor
+        self.color = currColor
     }
     
     fileprivate func curvePath( currPoint: CGPoint, centerPoint: CGPoint, endPoint: CGPoint, nextPoint: CGPoint) {
         let path = UIBezierPath()
         let alpha: CGFloat = 1.0/3.0
         
-        path.move(to: self.center) // = currPoint
+        path.move(to: self.shapeLayer.position) // = currPoint
         
         let controlPoint1 = CGPoint(x: currPoint.x - mx * alpha, y: currPoint.y - my * alpha)
         mx = (centerPoint.x - nextPoint.x) / 2.0
@@ -105,7 +149,7 @@ class ForceAnimationCircle: UIView {
         // set some more parameters for the animation
         anim.duration = self.duration
         // add the animation to the squares 'layer' property
-        self.layer.add(anim, forKey: "animate position along path")
-        self.center = endPoint
+        self.shapeLayer.add(anim, forKey: "animate position along path")
+        self.shapeLayer.position = endPoint
     }
 }
