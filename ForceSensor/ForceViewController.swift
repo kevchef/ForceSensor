@@ -37,15 +37,6 @@ struct Force {
 
 class ForceViewController: UIViewController {
     
-    var ForceCircle: UIView!
-    fileprivate var mx : CGFloat = 0
-    fileprivate var my : CGFloat = 0
-
-    var duration = 0.16
-    fileprivate let delay = 0
-    fileprivate let scale = 1.2
-    fileprivate var Time = Date()
-
     var F_queue: [Force] = [Force(),Force(),Force()]
 
     var centralManager: CBCentralManager!
@@ -56,114 +47,29 @@ class ForceViewController: UIViewController {
     @IBOutlet weak var FyLabel: UILabel!
     @IBOutlet weak var FzLabel: UILabel!
 
-
     @IBOutlet weak var FC: ForceAnimationCircle!
-    @IBOutlet weak var Circle: PushButton!
     @IBOutlet weak var plusSign: UITextField!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-//        setupRect()
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        Circle.setNeedsDisplay()
-//        FC.AnimateCircle(F_array: [Force(),Force()])
     }
     
-    fileprivate func setupRect() {
-        ForceCircle = drawCircleView()
-        view.addSubview(ForceCircle)
-    }
-    
-    fileprivate func multiPosition(_ firstPos: CGPoint, _ secondPos: CGPoint) {
-        func simplePosition(_ pos: CGPoint) {
-            UIView.animate(withDuration: self.duration, animations: {
-                self.ForceCircle.frame.origin = pos
-            }, completion: nil)
-        }
-        
-        UIView.animate(withDuration: self.duration, animations: {
-            self.ForceCircle.frame.origin = firstPos
-        }, completion: { finished in
-            simplePosition(secondPos)
-        })
-    }
-
-    fileprivate func curvePath( currPoint: CGPoint, centerPoint: CGPoint, endPoint: CGPoint, nextPoint: CGPoint) {
-        let path = UIBezierPath()
-        let alpha: CGFloat = 1.0/3.0
-        
-        path.move(to: self.ForceCircle.center) // = currPoint
-        
-        let controlPoint1 = CGPoint(x: currPoint.x - mx * alpha, y: currPoint.y - my * alpha)
-        mx = (centerPoint.x - nextPoint.x) / 2.0
-        my = (centerPoint.y - nextPoint.y) / 2.0
-        let controlPoint2 = CGPoint(x: endPoint.x + mx * alpha, y: endPoint.y + my * alpha)
-        
-        path.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
-        
-        // create a new CAKeyframeAnimation that animates the objects position
-        let anim = CAKeyframeAnimation(keyPath: "position")
-        
-        // set the animations path to our bezier curve
-        anim.path = path.cgPath
-        
-        // set some more parameters for the animation
-        anim.duration = self.duration
-        
-        // add the animation to the squares 'layer' property
-        self.ForceCircle.layer.add(anim, forKey: "animate position along path")
-        self.ForceCircle.center = endPoint
-    }
-
     func onForceMeasurementReceived(_ F: Force) {
         FxLabel.text = String((F.X+F.prevX)/2)
         FyLabel.text = String((F.Y+F.prevY)/2)
         FzLabel.text = String((F.Z+F.prevZ)/2)
 
-//        Circle.posxFactor = CGFloat(F.X+F.prevX)/128
-//        Circle.posyFactor = CGFloat(-F.Y-F.prevY)/128
-//        Circle.scaleFactor = CGFloat(-F.Z-F.prevZ)/128
-////        print("scaleFactor: \(Circle.scaleFactor)")
-//
-//        Circle.setNeedsDisplay()
         F_queue[2] = F_queue[1]
         F_queue[1] = F_queue[0]
         F_queue[0] = F
         
-        
-        let currTime = Date()
-        let dT = currTime.timeIntervalSince(Time)
-        Time = currTime
-//        self.duration = dT
-        print(dT)
-        
-        var currentPoint = CGPoint(x: 0, y: 0)
-        currentPoint.x += CGFloat(F_queue[1].prevX)
-        currentPoint.y += CGFloat(F_queue[1].prevY)
-        var centerPoint = CGPoint(x: 0, y: 0)
-        centerPoint.x += CGFloat(F_queue[1].X)
-        centerPoint.y += CGFloat(F_queue[1].Y)
-        var endPoint = CGPoint(x: 0, y: 0)
-        endPoint.x += CGFloat(F_queue[0].prevX)
-        endPoint.y += CGFloat(F_queue[0].prevY)
-        var nextPoint = CGPoint(x: 0, y: 0)
-        nextPoint.x += CGFloat(F_queue[0].X)
-        nextPoint.y += CGFloat(F_queue[0].Y)
-        
-        
-        FC.AnimateCircle(F: F_queue[0])
-//        FC.changeSize(scale: CGFloat(F.Z))
-//        curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
-//        multiPosition(CGPoint(x: CGFloat(F_old.X)/1, y: CGFloat(F_old.Y)/1), CGPoint(x: CGFloat(F.X)/1, y: CGFloat(F.Y)/1) )
-//        F_old = F
+        FC.AnimateCircle(F_queue: F_queue)
     }
-
-
 }
 
-
+// extension to ForceViewController - CBCentralMangerDelegate
 extension ForceViewController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
@@ -204,7 +110,7 @@ extension ForceViewController: CBCentralManagerDelegate {
     }
 }
 
-
+// extension to ForceViewController - CBPeripheralDelegate
 extension ForceViewController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         for service in peripheral.services! {
