@@ -24,15 +24,6 @@ struct Force {
     var X = 0
     var Y = 0
     var Z = 0
-    
-    init(){
-        self.prevX = 0
-        self.prevY = 0
-        self.prevZ = 0
-        self.X = 0
-        self.Y = 0
-        self.Z = 0
-    }
 }
 
 class ForceViewController: UIViewController {

@@ -50,7 +50,21 @@ class ForceAnimationCircle: UIView {
         self.shapeLayer.strokeColor = UIColor.green.cgColor
         self.shapeLayer.lineWidth = 3.0
         
+        let PlusSign = UIBezierPath()
+        PlusSign.move(to: CGPoint(x: 0, y: -10))
+        PlusSign.addLine(to: CGPoint(x: 0, y: 10))
+        PlusSign.move(to: CGPoint(x: -10, y: 0))
+        PlusSign.addLine(to: CGPoint(x: 10, y: 0))
+        PlusSign.close()
+
+
+        let plusLayer = CAShapeLayer()
+        plusLayer.path = PlusSign.cgPath
+        plusLayer.strokeColor = UIColor.black.cgColor
+        plusLayer.lineWidth = 3
         self.layer.addSublayer(shapeLayer)
+        self.layer.addSublayer(plusLayer)
+
     }
     
     func AnimateCircle(F_queue: [Force]){
@@ -69,7 +83,6 @@ class ForceAnimationCircle: UIView {
         
         
         curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
-        
     }
     
     fileprivate func curvePath( currPoint: CGPoint, centerPoint: CGPoint, endPoint: CGPoint, nextPoint: CGPoint) {
