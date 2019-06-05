@@ -16,7 +16,7 @@ class ForceAnimationCircle: UIView {
     
     let maxFZ = CGFloat(-100)
     let maxFXY = CGFloat(128)
-    let duration = 0.01
+    let duration = 0.16
 
 
     private var size: CGFloat
@@ -108,13 +108,14 @@ class ForceAnimationCircle: UIView {
         
         let currScale = CGFloat(F_queue[0].Z)/maxFZ
         changeCircleColor(currScale: currScale)
-        self.size = (CGFloat(F_queue[0].Z)/maxFZ + 1) * initFrame.width
-        changeCircleSize()
+        let currSize = (CGFloat(F_queue[0].Z)/maxFZ + 1) * initFrame.width
+        changeCircleSize(currSize: currSize)
     }
     
-    fileprivate func changeCircleSize(){
-        self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: self.size, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+    fileprivate func changeCircleSize(currSize: CGFloat){
+        self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: currSize, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
         self.shapeLayer.path = circlePath.cgPath
+        self.size = currSize;
     }
     
     fileprivate func changeCircleColor(currScale: CGFloat){
@@ -148,6 +149,7 @@ class ForceAnimationCircle: UIView {
         anim.path = path.cgPath
         // set some more parameters for the animation
         anim.duration = self.duration
+        anim.isRemovedOnCompletion = false
         // add the animation to the squares 'layer' property
         self.shapeLayer.add(anim, forKey: "animate position along path")
         self.shapeLayer.position = endPoint

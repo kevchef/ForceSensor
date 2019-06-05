@@ -71,6 +71,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Taa-yC-HdI" customClass="RecordButton" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="172" y="571" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <accessibility key="accessibilityConfiguration">
@@ -83,6 +87,7 @@
                         <outlet property="FxLabel" destination="DkL-71-W1m" id="xqO-HU-oTD"/>
                         <outlet property="FyLabel" destination="RRy-mP-4ce" id="jjP-yw-4y3"/>
                         <outlet property="FzLabel" destination="FfR-Jm-Smb" id="vam-Be-XkS"/>
+                        <outlet property="RecordButton" destination="Taa-yC-HdI" id="lq5-5J-T9D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

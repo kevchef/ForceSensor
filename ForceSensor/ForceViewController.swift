@@ -39,7 +39,7 @@ class ForceViewController: UIViewController {
     @IBOutlet weak var FzLabel: UILabel!
 
     @IBOutlet weak var FC: ForceAnimationCircle!
-    @IBOutlet weak var plusSign: UITextField!
+    @IBOutlet weak var RecordButton: RecordButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
