@@ -34,6 +34,9 @@ class ForceViewController: UIViewController {
     var PedalPeripheral: CBPeripheral!
     var i : CGFloat = 0.0
     var writeToCSV = false
+    var filename = "not changed yet"
+    var path = NSURL(fileURLWithPath: NSTemporaryDirectory())
+    var CSVData = "F.prevX,F.prevY,F.prevZ,F.X,F.Y,F.Z\n"
 
     @IBOutlet weak var FxLabel: UILabel!
     @IBOutlet weak var FyLabel: UILabel!
@@ -48,6 +51,9 @@ class ForceViewController: UIViewController {
         // Do any additional setup after loading the view.
         centralManager = CBCentralManager(delegate: self, queue: nil)
 //        Test.animate()
+        if(writeToCSV == true){
+            RecordButton.switchState()
+        }
     }
     
     func onForceMeasurementReceived(_ F: Force) {
@@ -65,15 +71,23 @@ class ForceViewController: UIViewController {
     @IBAction func switchRecording(_ sender: Any) {
         if( writeToCSV == false ){
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "EnterFilename")
-//            EnterFilenameViewController()
-            vc.modalPresentationStyle = .overCurrentContext
-            vc.modalTransitionStyle = .crossDissolve
-            present(vc, animated: true, completion: nil)
-                        
-            writeToCSV = false
-            print(writeToCSV)
+            let vc = storyboard.instantiateViewController(withIdentifier: "EnterFilename") as? EnterFilenameViewController
+            vc?.RecordButton = RecordButton
+            present(vc!, animated: true, completion: nil)
+            print(filename)
+        } else {
+            writeToCSV = false;
+            do {
+                try CSVData.write(to: path as URL, atomically: true, encoding: String.Encoding.utf8)
+                let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+                present(vc, animated: true, completion: nil)
+
+            } catch {
+                print("Failed to create file")
+                print("\(error)")
+            }
         }
+        
     }
     
 }
@@ -146,6 +160,10 @@ extension ForceViewController: CBPeripheralDelegate {
                 var F = Force()
                 F = self.ForceMeasurementConversion(from: characteristic)
                 self.onForceMeasurementReceived(F)
+                if(writeToCSV == true){
+                    CSVData += "\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n"
+                    print("\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n")
+                }
             }
 //        }
     }

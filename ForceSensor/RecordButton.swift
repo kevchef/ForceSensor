@@ -122,6 +122,28 @@ class RecordButton: UIButton {
         self.isSelected = !self.isSelected
     }
     
+    func switchState()
+    {
+        //Create the animation to restore the color of the button
+        let colorChange = CABasicAnimation(keyPath: "fillColor")
+        colorChange.duration = animationDuration;
+        colorChange.toValue = UIColor.red.cgColor
+        
+        //make sure that the color animation is not reverted once the animation is completed
+        colorChange.fillMode = CAMediaTimingFillMode.forwards
+        colorChange.isRemovedOnCompletion = false
+        
+        //indicate which animation timing function to use, in this case ease in and ease out
+        colorChange.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        
+        //add the animation
+        self.pathLayer.add(colorChange, forKey:"darkColor")
+        
+        //change the state of the control to update the shape
+        self.isSelected = !self.isSelected
+    }
+
+    
     @objc func touchDown(sender:UIButton)
     {
         //when the user touches the button, the inner shape should change transparency

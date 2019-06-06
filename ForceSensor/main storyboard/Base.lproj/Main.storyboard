@@ -13,7 +13,7 @@
         <!--Force View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ForceViewController" customModule="ForceSensor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ForceView" modalTransitionStyle="crossDissolve" id="BYZ-38-t0r" customClass="ForceViewController" customModule="ForceSensor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -73,11 +73,6 @@
                                     <action selector="switchRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9q5-3L-1gp"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Jy-Ee-VBd" customClass="TestCircle" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="148" y="312" width="79" height="42"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P8B-oq-YZX" customClass="ForceAnimationCircle" customModule="ForceSensor" customModuleProvider="target">
                                 <rect key="frame" x="178" y="464" width="55" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -141,6 +136,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <state key="normal" title="Done"/>
+                                        <connections>
+                                            <action selector="Done:" destination="PJ4-nF-bxQ" eventType="touchUpInside" id="IqU-2N-yeq"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dMI-gP-kQ6">
                                         <rect key="frame" x="20" y="100" width="70" height="40"/>
@@ -179,6 +177,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v4o-GA-Wpu"/>
                     </view>
+                    <connections>
+                        <outlet property="EnterFilename" destination="Dl9-uB-3wo" id="238-K0-p7Q"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1VF-Ha-9FP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
