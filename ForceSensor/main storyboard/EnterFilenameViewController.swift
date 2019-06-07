@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import CoreBluetooth
+
 
 class EnterFilenameViewController: UIViewController {
 
     @IBOutlet weak var EnterFilename: UITextField!
     var RecordButton: RecordButton!
     var filename = ""
+    var Peripheral: CBPeripheral!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +43,7 @@ class EnterFilenameViewController: UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "ForceView") as? ForceViewController
         RecordButton.switchState()
         vc?.RecordButton = RecordButton
+        vc?.PedalPeripheral = Peripheral
         vc?.writeToCSV = false
         present(vc!, animated: true, completion: nil)
         

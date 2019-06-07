@@ -7,6 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1EC23822A95DB400A104E7 /* BleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23722A95DB400A104E7 /* BleManager.swift */; };
+		0A1EC24222A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23C22A9737100A104E7 /* BLEDeviceDiscoverServices.swift */; };
+		0A1EC24322A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23C22A9737100A104E7 /* BLEDeviceDiscoverServices.swift */; };
+		0A1EC24422A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23C22A9737100A104E7 /* BLEDeviceDiscoverServices.swift */; };
+		0A1EC24522A9737100A104E7 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23D22A9737100A104E7 /* BLEManager.swift */; };
+		0A1EC24622A9737100A104E7 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23D22A9737100A104E7 /* BLEManager.swift */; };
+		0A1EC24722A9737100A104E7 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23D22A9737100A104E7 /* BLEManager.swift */; };
+		0A1EC24822A9737100A104E7 /* BLEDeviceConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23E22A9737100A104E7 /* BLEDeviceConnection.swift */; };
+		0A1EC24922A9737100A104E7 /* BLEDeviceConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23E22A9737100A104E7 /* BLEDeviceConnection.swift */; };
+		0A1EC24A22A9737100A104E7 /* BLEDeviceConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23E22A9737100A104E7 /* BLEDeviceConnection.swift */; };
+		0A1EC24B22A9737100A104E7 /* BLEDeviceScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23F22A9737100A104E7 /* BLEDeviceScan.swift */; };
+		0A1EC24C22A9737100A104E7 /* BLEDeviceScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23F22A9737100A104E7 /* BLEDeviceScan.swift */; };
+		0A1EC24D22A9737100A104E7 /* BLEDeviceScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC23F22A9737100A104E7 /* BLEDeviceScan.swift */; };
+		0A1EC24E22A9737100A104E7 /* BLEDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24022A9737100A104E7 /* BLEDeviceProperties.swift */; };
+		0A1EC24F22A9737100A104E7 /* BLEDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24022A9737100A104E7 /* BLEDeviceProperties.swift */; };
+		0A1EC25022A9737100A104E7 /* BLEDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24022A9737100A104E7 /* BLEDeviceProperties.swift */; };
+		0A1EC25122A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24122A9737100A104E7 /* BLEDeviceRSSI.swift */; };
+		0A1EC25222A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24122A9737100A104E7 /* BLEDeviceRSSI.swift */; };
+		0A1EC25322A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EC24122A9737100A104E7 /* BLEDeviceRSSI.swift */; };
 		0A2126B422A537AB006ABBD5 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2126B322A537AB006ABBD5 /* Common.swift */; };
 		0A54821122A7E88A004D98E0 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A54821022A7E88A004D98E0 /* RecordButton.swift */; };
 		0A7ED10D22A7EF6200702ECF /* TestCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED10C22A7EF6200702ECF /* TestCircle.swift */; };
@@ -39,6 +58,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A1EC23722A95DB400A104E7 /* BleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BleManager.swift; path = ForceSensor/BleManager.swift; sourceTree = SOURCE_ROOT; };
+		0A1EC23C22A9737100A104E7 /* BLEDeviceDiscoverServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDeviceDiscoverServices.swift; sourceTree = "<group>"; };
+		0A1EC23D22A9737100A104E7 /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
+		0A1EC23E22A9737100A104E7 /* BLEDeviceConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDeviceConnection.swift; sourceTree = "<group>"; };
+		0A1EC23F22A9737100A104E7 /* BLEDeviceScan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDeviceScan.swift; sourceTree = "<group>"; };
+		0A1EC24022A9737100A104E7 /* BLEDeviceProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDeviceProperties.swift; sourceTree = "<group>"; };
+		0A1EC24122A9737100A104E7 /* BLEDeviceRSSI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDeviceRSSI.swift; sourceTree = "<group>"; };
 		0A2126B322A537AB006ABBD5 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		0A54821022A7E88A004D98E0 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		0A7ED10C22A7EF6200702ECF /* TestCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCircle.swift; sourceTree = "<group>"; };
@@ -94,9 +120,23 @@
 			path = "main storyboard";
 			sourceTree = "<group>";
 		};
+		0A1EC23B22A9737100A104E7 /* BLEManager */ = {
+			isa = PBXGroup;
+			children = (
+				0A1EC23C22A9737100A104E7 /* BLEDeviceDiscoverServices.swift */,
+				0A1EC23D22A9737100A104E7 /* BLEManager.swift */,
+				0A1EC23E22A9737100A104E7 /* BLEDeviceConnection.swift */,
+				0A1EC23F22A9737100A104E7 /* BLEDeviceScan.swift */,
+				0A1EC24022A9737100A104E7 /* BLEDeviceProperties.swift */,
+				0A1EC24122A9737100A104E7 /* BLEDeviceRSSI.swift */,
+			);
+			path = BLEManager;
+			sourceTree = "<group>";
+		};
 		0A86A8C322986D3600611D1F = {
 			isa = PBXGroup;
 			children = (
+				0A1EC23B22A9737100A104E7 /* BLEManager */,
 				0A86A8CE22986D3600611D1F /* ForceSensor */,
 				0A86A8E322986D3700611D1F /* ForceSensorTests */,
 				0A86A8EE22986D3700611D1F /* ForceSensorUITests */,
@@ -117,6 +157,7 @@
 		0A86A8CE22986D3600611D1F /* ForceSensor */ = {
 			isa = PBXGroup;
 			children = (
+				0A1EC23722A95DB400A104E7 /* BleManager.swift */,
 				0A86A8CF22986D3600611D1F /* AppDelegate.swift */,
 				0A1EC23622A90DA900A104E7 /* main storyboard */,
 				0A7ED10C22A7EF6200702ECF /* TestCircle.swift */,
@@ -280,10 +321,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A86A8D222986D3600611D1F /* ForceViewController.swift in Sources */,
+				0A1EC24E22A9737100A104E7 /* BLEDeviceProperties.swift in Sources */,
+				0A1EC23822A95DB400A104E7 /* BleManager.swift in Sources */,
 				0A2126B422A537AB006ABBD5 /* Common.swift in Sources */,
+				0A1EC24222A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */,
 				0AE5A83E22A6666000817EBA /* ForceAnimationCircle.swift in Sources */,
 				0A7ED10D22A7EF6200702ECF /* TestCircle.swift in Sources */,
+				0A1EC24B22A9737100A104E7 /* BLEDeviceScan.swift in Sources */,
 				0A86A8D022986D3600611D1F /* AppDelegate.swift in Sources */,
+				0A1EC24822A9737100A104E7 /* BLEDeviceConnection.swift in Sources */,
+				0A1EC25122A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */,
+				0A1EC24522A9737100A104E7 /* BLEManager.swift in Sources */,
 				0A7ED11422A8199100702ECF /* EnterFilenameViewController.swift in Sources */,
 				0A54821122A7E88A004D98E0 /* RecordButton.swift in Sources */,
 			);
@@ -293,7 +341,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A1EC24C22A9737100A104E7 /* BLEDeviceScan.swift in Sources */,
+				0A1EC24322A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */,
+				0A1EC24F22A9737100A104E7 /* BLEDeviceProperties.swift in Sources */,
+				0A1EC25222A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */,
+				0A1EC24622A9737100A104E7 /* BLEManager.swift in Sources */,
 				0A86A8E522986D3700611D1F /* ForceSensorTests.swift in Sources */,
+				0A1EC24922A9737100A104E7 /* BLEDeviceConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +355,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A1EC24D22A9737100A104E7 /* BLEDeviceScan.swift in Sources */,
+				0A1EC24422A9737100A104E7 /* BLEDeviceDiscoverServices.swift in Sources */,
+				0A1EC25022A9737100A104E7 /* BLEDeviceProperties.swift in Sources */,
+				0A1EC25322A9737100A104E7 /* BLEDeviceRSSI.swift in Sources */,
+				0A1EC24722A9737100A104E7 /* BLEManager.swift in Sources */,
 				0A86A8F022986D3700611D1F /* ForceSensorUITests.swift in Sources */,
+				0A1EC24A22A9737100A104E7 /* BLEDeviceConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
