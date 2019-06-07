@@ -9,13 +9,13 @@
 import UIKit
 import CoreBluetooth
 
-let CyclingPowerServiceCBUUID = CBUUID(string: "0x1818")
-let ForcesServiceCBUUID = CBUUID(string: "1844")
-let ForcesCharacteristicsCBUUID = CBUUID(string: "299F")
-let BatteryServiceCBUUID = CBUUID(string: "0x180F")
-let DeviceInfoServiceCBUUID = CBUUID(string: "0x180A")
+//let CyclingPowerServiceCBUUID = CBUUID(string: "0x1818")
+//let ForcesServiceCBUUID = CBUUID(string: "1844")
+//let ForcesCharacteristicsCBUUID = CBUUID(string: "299F")
+//let BatteryServiceCBUUID = CBUUID(string: "0x180F")
+//let DeviceInfoServiceCBUUID = CBUUID(string: "0x180A")
 
-let PedalServices = [CyclingPowerServiceCBUUID,ForcesServiceCBUUID,BatteryServiceCBUUID,DeviceInfoServiceCBUUID]
+//let PedalServices = [CyclingPowerServiceCBUUID,ForcesServiceCBUUID,BatteryServiceCBUUID,DeviceInfoServiceCBUUID]
 
 struct Force {
     var prevX = 0
@@ -49,14 +49,19 @@ class ForceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+//        centralManager = CBCentralManager(delegate: self, queue: nil)
+//        self.present(BLE.sharedInstance.deviceSheet!, animated: true, completion: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onForceMeasurementReceived),
+                                               name: .BLE_ForceMeasurementUpdated, object: BLE.sharedInstance)
 //        Test.animate()
         if(writeToCSV == true){
             RecordButton.switchState()
         }
     }
     
-    func onForceMeasurementReceived(_ F: Force) {
+    @objc private func onForceMeasurementReceived(notification: Notification) {
+        let F = BLE.sharedInstance.getF()
+        print("force measurement received")
         FxLabel.text = String((F.X+F.prevX)/2)
         FyLabel.text = String((F.Y+F.prevY)/2)
         FzLabel.text = String((F.Z+F.prevZ)/2)
@@ -69,6 +74,7 @@ class ForceViewController: UIViewController {
     }
     
     @IBAction func switchRecording(_ sender: Any) {
+
         if( writeToCSV == false ){
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "EnterFilename") as? EnterFilenameViewController
@@ -87,125 +93,125 @@ class ForceViewController: UIViewController {
                 print("\(error)")
             }
         }
-        
+
     }
-    
+
 }
 
-// extension to ForceViewController - CBCentralMangerDelegate
-extension ForceViewController: CBCentralManagerDelegate {
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-        case .unknown:
-            print("central.state is .unknown")
-        case .resetting:
-            print("central.state is .resetting")
-        case .unsupported:
-            print("central.state is .unsupported")
-        case .unauthorized:
-            print("central.state is .unauthorized")
-        case .poweredOff:
-            print("central.state is .poweredOff")
-        case .poweredOn:
-            print("central.state is .poweredOn")
-            centralManager.scanForPeripherals(withServices: PedalServices)
-        @unknown default:
-            print("unknown state")
-            
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print(peripheral)
-        PedalPeripheral = peripheral
-        PedalPeripheral.delegate = self
-        centralManager.stopScan()
-        centralManager.connect(PedalPeripheral, options: nil)
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("connected to Peripheral")
-        PedalPeripheral.discoverServices(nil)
-        
-    }
-}
-
-// extension to ForceViewController - CBPeripheralDelegate
-extension ForceViewController: CBPeripheralDelegate {
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        for service in peripheral.services! {
-            if service.uuid == ForcesServiceCBUUID {
-                print("Service: \(service)")
-                peripheral.discoverCharacteristics(nil, for: service)
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService,
-                    error: Error?) {
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            if characteristic.uuid == ForcesCharacteristicsCBUUID {
-                peripheral.setNotifyValue(true, for:  characteristic)
-//                print(characteristic)
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
-                    error: Error?) {
-//        DispatchQueue.main.async {
-            if characteristic.uuid == ForcesCharacteristicsCBUUID{
-                var F = Force()
-                F = self.ForceMeasurementConversion(from: characteristic)
-                self.onForceMeasurementReceived(F)
-                if(writeToCSV == true){
-                    CSVData += "\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n"
-                    print("\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n")
-                }
-            }
+//// extension to ForceViewController - CBCentralMangerDelegate
+//extension ForceViewController: CBCentralManagerDelegate {
+//    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+//        switch central.state {
+//        case .unknown:
+//            print("central.state is .unknown")
+//        case .resetting:
+//            print("central.state is .resetting")
+//        case .unsupported:
+//            print("central.state is .unsupported")
+//        case .unauthorized:
+//            print("central.state is .unauthorized")
+//        case .poweredOff:
+//            print("central.state is .poweredOff")
+//        case .poweredOn:
+//            print("central.state is .poweredOn")
+//            centralManager.scanForPeripherals(withServices: PedalServices)
+//        @unknown default:
+//            print("unknown state")
+//
 //        }
-    }
-
-    
-    private func ForceMeasurementConversion(from characteristic: CBCharacteristic) -> Force {
-        guard let characteristicData = characteristic.value else { return Force() }
-        var F = Force()
-        let byteArray = [UInt8](characteristicData)
-
-        F.prevX = Int(byteArray[1])
-        if (F.prevX & 0x80) != 0 {
-            F.prevX = F.prevX - (1 << 8 ) //256
-        }
-        
-        F.prevY = Int(byteArray[2])
-        if (F.prevY & 0x80) != 0 {
-            F.prevY = F.prevY - (1 << 8 ) //256
-        }
-
-        F.prevZ = ((Int(byteArray[4]) << 8) + Int(byteArray[3]))
-        if (F.prevZ & 0x8000) != 0 {
-            F.prevZ = F.prevZ - (1 << 16) // 65536
-        }
-
-        F.X = Int(byteArray[11])
-        if (F.X & 0x80) != 0 {
-            F.X = F.X - (1 << 8 ) // 256
-        }
-
-        F.Y = Int(byteArray[12])
-        if (F.Y & 0x80) != 0 {
-            F.Y = F.Y - (1 << 8 ) // 256
-        }
-
-        F.Z = (Int(byteArray[14]) << 8) + Int(byteArray[13])
-        if (F.Z & 0x8000) != 0 {
-            F.Z = F.Z - (1 <<  16) //65536
-        }
-        
-        return F
-    }
-    
-}
-
+//    }
+//
+//    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+//                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
+//        print(peripheral)
+//        PedalPeripheral = peripheral
+//        PedalPeripheral.delegate = self
+//        centralManager.stopScan()
+//        centralManager.connect(PedalPeripheral, options: nil)
+//    }
+//
+//    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+//        print("connected to Peripheral")
+//        PedalPeripheral.discoverServices(nil)
+//
+//    }
+//}
+//
+//// extension to ForceViewController - CBPeripheralDelegate
+//extension ForceViewController: CBPeripheralDelegate {
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+//        for service in peripheral.services! {
+//            if service.uuid == ForcesServiceCBUUID {
+//                print("Service: \(service)")
+//                peripheral.discoverCharacteristics(nil, for: service)
+//            }
+//        }
+//    }
+//
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService,
+//                    error: Error?) {
+//        guard let characteristics = service.characteristics else { return }
+//        for characteristic in characteristics {
+//            if characteristic.uuid == ForcesCharacteristicsCBUUID {
+//                peripheral.setNotifyValue(true, for:  characteristic)
+////                print(characteristic)
+//            }
+//        }
+//    }
+//
+//    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
+//                    error: Error?) {
+////        DispatchQueue.main.async {
+//            if characteristic.uuid == ForcesCharacteristicsCBUUID{
+//                var F = Force()
+//                F = self.ForceMeasurementConversion(from: characteristic)
+//                self.onForceMeasurementReceived(F)
+//                if(writeToCSV == true){
+//                    CSVData += "\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n"
+//                    print("\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n")
+//                }
+//            }
+////        }
+//    }
+//
+//
+//    private func ForceMeasurementConversion(from characteristic: CBCharacteristic) -> Force {
+//        guard let characteristicData = characteristic.value else { return Force() }
+//        var F = Force()
+//        let byteArray = [UInt8](characteristicData)
+//
+//        F.prevX = Int(byteArray[1])
+//        if (F.prevX & 0x80) != 0 {
+//            F.prevX = F.prevX - (1 << 8 ) //256
+//        }
+//
+//        F.prevY = Int(byteArray[2])
+//        if (F.prevY & 0x80) != 0 {
+//            F.prevY = F.prevY - (1 << 8 ) //256
+//        }
+//
+//        F.prevZ = ((Int(byteArray[4]) << 8) + Int(byteArray[3]))
+//        if (F.prevZ & 0x8000) != 0 {
+//            F.prevZ = F.prevZ - (1 << 16) // 65536
+//        }
+//
+//        F.X = Int(byteArray[11])
+//        if (F.X & 0x80) != 0 {
+//            F.X = F.X - (1 << 8 ) // 256
+//        }
+//
+//        F.Y = Int(byteArray[12])
+//        if (F.Y & 0x80) != 0 {
+//            F.Y = F.Y - (1 << 8 ) // 256
+//        }
+//
+//        F.Z = (Int(byteArray[14]) << 8) + Int(byteArray[13])
+//        if (F.Z & 0x8000) != 0 {
+//            F.Z = F.Z - (1 <<  16) //65536
+//        }
+//
+//        return F
+//    }
+//
+//}
+//

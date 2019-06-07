@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		0A2126B422A537AB006ABBD5 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2126B322A537AB006ABBD5 /* Common.swift */; };
 		0A54821122A7E88A004D98E0 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A54821022A7E88A004D98E0 /* RecordButton.swift */; };
+		0A6BF13622AA66FA006F9ED3 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF13522AA66FA006F9ED3 /* BLE.swift */; };
+		0A6BF13822AA6C0D006F9ED3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF13722AA6C0D006F9ED3 /* Constants.swift */; };
+		0A6BF19022AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
+		0A6BF19122AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
+		0A6BF19222AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
 		0A7ED10D22A7EF6200702ECF /* TestCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED10C22A7EF6200702ECF /* TestCircle.swift */; };
 		0A7ED11422A8199100702ECF /* EnterFilenameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED11322A8199100702ECF /* EnterFilenameViewController.swift */; };
 		0A86A8D022986D3600611D1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8CF22986D3600611D1F /* AppDelegate.swift */; };
@@ -41,6 +46,9 @@
 /* Begin PBXFileReference section */
 		0A2126B322A537AB006ABBD5 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		0A54821022A7E88A004D98E0 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		0A6BF13522AA66FA006F9ED3 /* BLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLE.swift; sourceTree = "<group>"; };
+		0A6BF13722AA6C0D006F9ED3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customNSNotifications.swift; sourceTree = "<group>"; };
 		0A7ED10C22A7EF6200702ECF /* TestCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCircle.swift; sourceTree = "<group>"; };
 		0A7ED11322A8199100702ECF /* EnterFilenameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterFilenameViewController.swift; sourceTree = "<group>"; };
 		0A86A8CC22986D3600611D1F /* ForceSensor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForceSensor.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +125,9 @@
 		0A86A8CE22986D3600611D1F /* ForceSensor */ = {
 			isa = PBXGroup;
 			children = (
+				0A6BF13522AA66FA006F9ED3 /* BLE.swift */,
+				0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */,
+				0A6BF13722AA6C0D006F9ED3 /* Constants.swift */,
 				0A86A8CF22986D3600611D1F /* AppDelegate.swift */,
 				0A1EC23622A90DA900A104E7 /* main storyboard */,
 				0A7ED10C22A7EF6200702ECF /* TestCircle.swift */,
@@ -281,11 +292,14 @@
 			files = (
 				0A86A8D222986D3600611D1F /* ForceViewController.swift in Sources */,
 				0A2126B422A537AB006ABBD5 /* Common.swift in Sources */,
+				0A6BF19022AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0AE5A83E22A6666000817EBA /* ForceAnimationCircle.swift in Sources */,
 				0A7ED10D22A7EF6200702ECF /* TestCircle.swift in Sources */,
 				0A86A8D022986D3600611D1F /* AppDelegate.swift in Sources */,
 				0A7ED11422A8199100702ECF /* EnterFilenameViewController.swift in Sources */,
 				0A54821122A7E88A004D98E0 /* RecordButton.swift in Sources */,
+				0A6BF13622AA66FA006F9ED3 /* BLE.swift in Sources */,
+				0A6BF13822AA6C0D006F9ED3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,6 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A6BF19122AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0A86A8E522986D3700611D1F /* ForceSensorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -301,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A6BF19222AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0A86A8F022986D3700611D1F /* ForceSensorUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
