@@ -30,6 +30,14 @@ class RecordButton: UIButton {
     //common set up code
     func setup()
     {
+        // add white background with black stroke for button
+        let backgroundLayer = CAShapeLayer()
+        backgroundLayer.path = UIBezierPath(roundedRect: CGRect(x:3, y:3, width:60, height:60), cornerRadius: 30).cgPath
+        backgroundLayer.fillColor = UIColor.white.cgColor
+        backgroundLayer.strokeColor = UIColor.black.cgColor
+        backgroundLayer.lineWidth = 6
+        self.layer.addSublayer(backgroundLayer)
+        
         //add a shape layer for the inner shape to be able to animate it
         frame = CGRect(x: UIScreen.main.bounds.midX-33, y: UIScreen.main.bounds.maxY-80, width: 66, height: 66)
         self.pathLayer = CAShapeLayer()
@@ -162,13 +170,13 @@ class RecordButton: UIButton {
         self.pathLayer.add(morph, forKey:"")
     }
     
-    override func draw(_ rect: CGRect) {
-        //always draw the outer ring, the inner control is drawn during the animations
-        let outerRing = UIBezierPath(ovalIn: CGRect(x:3, y:3, width:60, height:60))
-        outerRing.lineWidth = 6
-        UIColor.black.setStroke()
-        outerRing.stroke()
-    }
+//    override func draw(_ rect: CGRect) {
+//        //always draw the outer ring, the inner control is drawn during the animations
+//        let outerRing = UIBezierPath(ovalIn: CGRect(x:3, y:3, width:60, height:60))
+//        outerRing.lineWidth = 6
+//        UIColor.black.setStroke()
+//        outerRing.stroke()
+//    }
     
     func currentInnerPath () -> UIBezierPath
     {

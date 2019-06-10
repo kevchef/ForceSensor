@@ -43,8 +43,8 @@ class ForceViewController: UIViewController {
     @IBOutlet weak var FzLabel: UILabel!
     
 //    @IBOutlet weak var Test: TestCircle!
-    @IBOutlet weak var FC: ForceAnimationCircle!
     @IBOutlet weak var RecordButton: RecordButton!
+    @IBOutlet weak var FC: ForceAnimationCircle!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,16 +61,23 @@ class ForceViewController: UIViewController {
     
     @objc private func onForceMeasurementReceived(notification: Notification) {
         let F = BLE.sharedInstance.getF()
-        print("force measurement received")
-        FxLabel.text = String((F.X+F.prevX)/2)
-        FyLabel.text = String((F.Y+F.prevY)/2)
-        FzLabel.text = String((F.Z+F.prevZ)/2)
+//        print("force measurement received")
+        DispatchQueue.main.async { // Correct
+            self.FxLabel.text = String((F.X+F.prevX)/2)
+            self.FyLabel.text = String((F.Y+F.prevY)/2)
+            self.FzLabel.text = String((F.Z+F.prevZ)/2)
 
-        F_queue[2] = F_queue[1]
-        F_queue[1] = F_queue[0]
-        F_queue[0] = F
+            self.F_queue[2] = self.F_queue[1]
+            self.F_queue[1] = self.F_queue[0]
+            self.F_queue[0] = F
         
-        FC.AnimateCircle(F_queue: F_queue)
+            self.FC.AnimateCircle(F_queue: self.F_queue)
+            
+            if( self.writeToCSV == true ){
+                self.CSVData += "\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n"
+                print("\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n")
+            }
+        }
     }
     
     @IBAction func switchRecording(_ sender: Any) {
