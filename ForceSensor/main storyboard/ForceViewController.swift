@@ -17,22 +17,32 @@ import CoreBluetooth
 
 //let PedalServices = [CyclingPowerServiceCBUUID,ForcesServiceCBUUID,BatteryServiceCBUUID,DeviceInfoServiceCBUUID]
 
-struct Force {
-    var prevX = 0
-    var prevY = 0
-    var prevZ = 0
-    var X = 0
-    var Y = 0
-    var Z = 0
+struct outputData{
+    var Time = [Float]()
+    var name = "Name"
+    var X = [Int]()
+    var Y = [Int]()
+    var Z = [Int]()
+    
+    init() {
+        Time.reserveCapacity(1024)
+        X.reserveCapacity(1024)
+        Y.reserveCapacity(1024)
+        Z.reserveCapacity(1024)
+    }
 }
-
+    
+    
 class ForceViewController: UIViewController {
     
-    var F_queue: [Force] = [Force(),Force(),Force()]
+    var Measurement_queue: [Measurement] = [Measurement(),Measurement(),Measurement()]
 
     var centralManager: CBCentralManager!
     var PedalPeripheral: CBPeripheral!
-    var i : CGFloat = 0.0
+    
+    var recordIndex = Int(-1)
+    var recordStartTime = Date()
+    var out = outputData()
     var writeToCSV = false
     var filename = "not changed yet"
     var path = NSURL(fileURLWithPath: NSTemporaryDirectory())
@@ -59,26 +69,57 @@ class ForceViewController: UIViewController {
         }
     }
     
+    
+    
     @objc private func onForceMeasurementReceived(notification: Notification) {
-        let F = BLE.sharedInstance.getF()
+        let M = BLE.sharedInstance.getMeasurement()
 //        print("force measurement received")
         DispatchQueue.main.async { // Correct
-            self.FxLabel.text = String((F.X+F.prevX)/2)
-            self.FyLabel.text = String((F.Y+F.prevY)/2)
-            self.FzLabel.text = String((F.Z+F.prevZ)/2)
+            self.FxLabel.text = String((M.X+M.prevX)/2)
+            self.FyLabel.text = String((M.Y+M.prevY)/2)
+            self.FzLabel.text = String((M.Z+M.prevZ)/2)
 
-            self.F_queue[2] = self.F_queue[1]
-            self.F_queue[1] = self.F_queue[0]
-            self.F_queue[0] = F
+            self.Measurement_queue[2] = self.Measurement_queue[1]
+            self.Measurement_queue[1] = self.Measurement_queue[0]
+            self.Measurement_queue[0] = M
         
-            self.FC.AnimateCircle(F_queue: self.F_queue)
+            self.FC.AnimateCircle(M_queue: self.Measurement_queue)
             
             if( self.writeToCSV == true ){
-                self.CSVData += "\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n"
-                print("\(F.prevX),\(F.prevY),\(F.prevZ),\(F.X),\(F.Y),\(F.Z)\n")
+//                self.CSVData += "\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n"
+//                print("\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n")
+                
+                self.recordIndex = self.recordIndex + 1
+                self.out.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.out.X.append(M.prevX)
+                self.out.Y.append(M.prevX)
+                self.out.Z.append(M.prevX)
+                
+                self.recordIndex = self.recordIndex + 1
+                self.out.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.out.X.append(M.X)
+                self.out.Y.append(M.Y)
+                self.out.Z.append(M.Z)
             }
         }
     }
+    
+    @IBAction func ShowSessionsPlot(_ sender: Any) {
+        if( self.writeToCSV == false ){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "SessionPlot") as? SessionPlotViewController
+            vc?.data = out
+            present(vc!, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "Failed to open Session Plots", message: "Please first stop recording data" , preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: nil))
+            self.present(alert, animated: true)
+
+        }
+        
+    }
+
     
     @IBAction func switchRecording(_ sender: Any) {
 
@@ -91,6 +132,10 @@ class ForceViewController: UIViewController {
         } else {
             writeToCSV = false;
             do {
+                for i in 0...out.Time.count-1{
+                    self.CSVData += "\(out.Time[i]),\(out.X[i]),\(out.Y[i]),\(out.Z[i])\n"
+                }
+                
                 try CSVData.write(to: path as URL, atomically: true, encoding: String.Encoding.utf8)
                 let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
                 present(vc, animated: true, completion: nil)

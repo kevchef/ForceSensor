@@ -12,8 +12,6 @@
 		0A6BF13622AA66FA006F9ED3 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF13522AA66FA006F9ED3 /* BLE.swift */; };
 		0A6BF13822AA6C0D006F9ED3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF13722AA6C0D006F9ED3 /* Constants.swift */; };
 		0A6BF19022AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
-		0A6BF19122AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
-		0A6BF19222AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */; };
 		0A7ED10D22A7EF6200702ECF /* TestCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED10C22A7EF6200702ECF /* TestCircle.swift */; };
 		0A7ED11422A8199100702ECF /* EnterFilenameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED11322A8199100702ECF /* EnterFilenameViewController.swift */; };
 		0A86A8D022986D3600611D1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8CF22986D3600611D1F /* AppDelegate.swift */; };
@@ -23,6 +21,8 @@
 		0A86A8DA22986D3700611D1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A86A8D822986D3700611D1F /* LaunchScreen.storyboard */; };
 		0A86A8E522986D3700611D1F /* ForceSensorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8E422986D3700611D1F /* ForceSensorTests.swift */; };
 		0A86A8F022986D3700611D1F /* ForceSensorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8EF22986D3700611D1F /* ForceSensorUITests.swift */; };
+		0AC4DAB622AE90EE000DADC6 /* SessionPlotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */; };
+		0AC4DAB822AE9A90000DADC6 /* CirclularPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */; };
 		0AE5A83E22A6666000817EBA /* ForceAnimationCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +64,8 @@
 		0A86A8EB22986D3700611D1F /* ForceSensorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForceSensorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A86A8EF22986D3700611D1F /* ForceSensorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorUITests.swift; sourceTree = "<group>"; };
 		0A86A8F122986D3700611D1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPlotViewController.swift; sourceTree = "<group>"; };
+		0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclularPlot.swift; sourceTree = "<group>"; };
 		0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceAnimationCircle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +99,7 @@
 			children = (
 				0A86A8D322986D3600611D1F /* Main.storyboard */,
 				0A86A8D122986D3600611D1F /* ForceViewController.swift */,
+				0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */,
 				0A7ED11322A8199100702ECF /* EnterFilenameViewController.swift */,
 			);
 			path = "main storyboard";
@@ -125,13 +128,12 @@
 		0A86A8CE22986D3600611D1F /* ForceSensor */ = {
 			isa = PBXGroup;
 			children = (
-				0A6BF13522AA66FA006F9ED3 /* BLE.swift */,
-				0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */,
-				0A6BF13722AA6C0D006F9ED3 /* Constants.swift */,
 				0A86A8CF22986D3600611D1F /* AppDelegate.swift */,
+				0AC4DAB422AE74DD000DADC6 /* BLE Handler */,
 				0A1EC23622A90DA900A104E7 /* main storyboard */,
 				0A7ED10C22A7EF6200702ECF /* TestCircle.swift */,
 				0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */,
+				0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */,
 				0A54821022A7E88A004D98E0 /* RecordButton.swift */,
 				0A2126B322A537AB006ABBD5 /* Common.swift */,
 				0A86A8D622986D3700611D1F /* Assets.xcassets */,
@@ -157,6 +159,16 @@
 				0A86A8F122986D3700611D1F /* Info.plist */,
 			);
 			path = ForceSensorUITests;
+			sourceTree = "<group>";
+		};
+		0AC4DAB422AE74DD000DADC6 /* BLE Handler */ = {
+			isa = PBXGroup;
+			children = (
+				0A6BF13522AA66FA006F9ED3 /* BLE.swift */,
+				0A6BF18F22AA9BA1006F9ED3 /* customNSNotifications.swift */,
+				0A6BF13722AA6C0D006F9ED3 /* Constants.swift */,
+			);
+			path = "BLE Handler";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A86A8D222986D3600611D1F /* ForceViewController.swift in Sources */,
+				0AC4DAB622AE90EE000DADC6 /* SessionPlotViewController.swift in Sources */,
 				0A2126B422A537AB006ABBD5 /* Common.swift in Sources */,
 				0A6BF19022AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0AE5A83E22A6666000817EBA /* ForceAnimationCircle.swift in Sources */,
@@ -299,6 +312,7 @@
 				0A7ED11422A8199100702ECF /* EnterFilenameViewController.swift in Sources */,
 				0A54821122A7E88A004D98E0 /* RecordButton.swift in Sources */,
 				0A6BF13622AA66FA006F9ED3 /* BLE.swift in Sources */,
+				0AC4DAB822AE9A90000DADC6 /* CirclularPlot.swift in Sources */,
 				0A6BF13822AA6C0D006F9ED3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,7 +321,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A6BF19122AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0A86A8E522986D3700611D1F /* ForceSensorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,7 +329,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A6BF19222AA9BA1006F9ED3 /* customNSNotifications.swift in Sources */,
 				0A86A8F022986D3700611D1F /* ForceSensorUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

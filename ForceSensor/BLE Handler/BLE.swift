@@ -10,6 +10,24 @@ import UIKit
 import Foundation
 import CoreBluetooth
 
+struct Measurement {
+    var prevCrankAngle = 0
+    var prevX = 0
+    var prevY = 0
+    var prevZ = 0
+    var prevPedalAngle = 0
+//    var prevVelX = 0
+//    var prevVelZ = 0
+    
+    var CrankAngle = 0
+    var X = 0
+    var Y = 0
+    var Z = 0
+    var PedalAngle = 0
+//    var VelX = 0
+//    var VelZ = 0
+}
+
 class BLE: NSObject {
     
     // MARK: - BLE shared instance
@@ -18,8 +36,9 @@ class BLE: NSObject {
     // MARK: - Properties
     //CoreBluetooth properties
     var centralManager: CBCentralManager!
-    var activeDevice: CBPeripheral?
-    var activeCharacteristic: CBCharacteristic?
+    var styx_left: CBPeripheral?
+    var styx_right: CBPeripheral?
+    var styx_characteristic: CBCharacteristic?
     
     //UIAlert properties
     public var deviceAlert: UIAlertController?
@@ -32,7 +51,7 @@ class BLE: NSObject {
     }
     
     //ble measurement storage variable
-    var F = Force()
+    var M = Measurement()
     // MARK: - Init method
     
     private override init() { }
@@ -77,14 +96,16 @@ extension BLE: CBCentralManagerDelegate {
         if (peripheral.name != nil) { title = peripheral.name!}
         print("central didDiscover peripheral")
         print(title)
-//        let availableDevice = UIAlertAction(title: title , style: .default, handler: {
-//            action -> Void in
+        let availableDevice = UIAlertAction(title: title , style: .default, handler: {
+            action -> Void in
             print("central - trying to connect")
-            activeDevice = peripheral //
-            activeDevice?.delegate = self //
+        if(title == "STYX_DEMO_LX") {
+            self.styx_left = peripheral //
+            self.styx_left?.delegate = self //
             self.centralManager.connect(peripheral,
-                                        options: [CBConnectPeripheralOptionNotifyOnNotificationKey : true])
-//        })
+                                        options: nil) // change to [CBConnectPeripheralOptionNotifyOnNotificationKey : true]) if you want to be alerted each time exiting the application
+        }
+        })
 
     }
     
@@ -94,7 +115,7 @@ extension BLE: CBCentralManagerDelegate {
         print("central is .connected")
 //        activeDevice = peripheral
 //        activeDevice?.delegate = self
-        activeDevice?.discoverServices([myDevice.ServiceUUID!])
+        styx_left?.discoverServices([myDevice.ServiceUUID!])
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -103,7 +124,7 @@ extension BLE: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if peripheral == activeDevice {
+        if peripheral == styx_left {
 //            postBLEConnectionStateNotification(.disconnected)
             print("central.state is .disconnected")
             clearDevices()
@@ -123,7 +144,7 @@ extension BLE: CBPeripheralDelegate {
         guard let services = peripheral.services else { return}
         for thisService in services {
             if thisService.uuid == myDevice.ServiceUUID {
-                activeDevice?.discoverCharacteristics(nil, for: thisService)
+                styx_left?.discoverCharacteristics(nil, for: thisService)
             }
         }
     }
@@ -140,8 +161,8 @@ extension BLE: CBPeripheralDelegate {
         print("peripheral is .connected")
         for thisCharacteristic in characteristics {
             if (thisCharacteristic.uuid == myDevice.CharactersticUUID) {
-                activeCharacteristic = thisCharacteristic
-                peripheral.setNotifyValue(true, for: activeCharacteristic!)
+                styx_characteristic = thisCharacteristic
+                peripheral.setNotifyValue(true, for: styx_characteristic!)
                 
             }
         }
@@ -160,7 +181,7 @@ extension BLE: CBPeripheralDelegate {
         
         if characteristic.uuid == myDevice.CharactersticUUID {
 //            postRecievedDataFromDeviceNotification()
-            self.F = self.ForceMeasurementConversion(from: characteristic)
+            self.M = self.MeasurementConversion(from: characteristic)
             postRecievedDataFromDeviceNotification()
 //            self.onForceMeasurementReceived(F)
 //            print(F)
@@ -176,8 +197,8 @@ extension BLE: CBPeripheralDelegate {
 extension BLE {
     
     // MARK: BLE Methods
-    func getF() -> Force{
-        return self.F
+    func getMeasurement() -> Measurement{
+        return self.M
     }
     
     func startCentralManager() {
@@ -192,17 +213,17 @@ extension BLE {
     }
     
     func disconnect() {
-        if let activeCharacteristic = activeCharacteristic {
-            activeDevice?.setNotifyValue(false, for: activeCharacteristic)
+        if let activeCharacteristic = styx_characteristic {
+            styx_left?.setNotifyValue(false, for: activeCharacteristic)
         }
-        if let activeDevice = activeDevice {
+        if let activeDevice = styx_left {
             centralManager.cancelPeripheralConnection(activeDevice)
         }
     }
     
     fileprivate func clearDevices() {
-        activeDevice = nil
-        activeCharacteristic = nil
+        styx_left = nil
+        styx_characteristic = nil
         myDevice.ServiceUUID = nil
         myDevice.CharactersticUUID = nil
     }
@@ -210,6 +231,7 @@ extension BLE {
     // MARK: UIActionSheet Methods
     
     fileprivate func createDeviceSheet() {
+        print("creating device sheet")
         deviceSheet = UIAlertController(title: "Please choose a device.",
                                         message: "Connect to:", preferredStyle: .actionSheet)
         deviceSheet!.addAction(UIAlertAction(title: "Cancel", style: .cancel,
@@ -219,6 +241,7 @@ extension BLE {
     fileprivate func createErrorAlert() {
         deviceAlert = UIAlertController(title: "Error: failed to connect.",
                                         message: "Please try again.", preferredStyle: .alert)
+        print("UIAlertController")
     }
     
     // MARK: NSNotificationCenter Methods
@@ -237,42 +260,85 @@ extension BLE {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "BLE_ForceMeasurementUpdated"), object: self, userInfo: nil)
     }
 
-    private func ForceMeasurementConversion(from characteristic: CBCharacteristic) -> Force {
-        guard let characteristicData = characteristic.value else { return Force() }
-        var F = Force()
+    private func MeasurementConversion(from characteristic: CBCharacteristic) -> Measurement {
+        guard let characteristicData = characteristic.value else { return Measurement() }
+        var M = Measurement()
         let byteArray = [UInt8](characteristicData)
-
-        F.prevX = Int(byteArray[1])
-        if (F.prevX & 0x80) != 0 {
-            F.prevX = F.prevX - (1 << 8 ) //256
+        
+        // previous Measurements
+        M.prevCrankAngle = Int(byteArray[0])
+        if (M.prevCrankAngle & 0x80) != 0 {
+            M.prevCrankAngle = M.prevCrankAngle - (1 << 8 ) //256
         }
 
-        F.prevY = Int(byteArray[2])
-        if (F.prevY & 0x80) != 0 {
-            F.prevY = F.prevY - (1 << 8 ) //256
+        M.prevX = Int(byteArray[1])
+        if (M.prevX & 0x80) != 0 {
+            M.prevX = M.prevX - (1 << 8 ) //256
         }
 
-        F.prevZ = ((Int(byteArray[4]) << 8) + Int(byteArray[3]))
-        if (F.prevZ & 0x8000) != 0 {
-            F.prevZ = F.prevZ - (1 << 16) // 65536
+        M.prevY = Int(byteArray[2])
+        if (M.prevY & 0x80) != 0 {
+            M.prevY = M.prevY - (1 << 8 ) //256
         }
 
-        F.X = Int(byteArray[11])
-        if (F.X & 0x80) != 0 {
-            F.X = F.X - (1 << 8 ) // 256
+        M.prevZ = ((Int(byteArray[4]) << 8) + Int(byteArray[3]))
+        if (M.prevZ & 0x8000) != 0 {
+            M.prevZ = M.prevZ - (1 << 16) // 65536
+        }
+        
+        M.prevPedalAngle = Int(byteArray[5])
+        if (M.prevPedalAngle & 0x80) != 0 {
+            M.prevPedalAngle = M.prevPedalAngle - (1 << 8 ) //256
         }
 
-        F.Y = Int(byteArray[12])
-        if (F.Y & 0x80) != 0 {
-            F.Y = F.Y - (1 << 8 ) // 256
+//        M.prevVelX = ((Int(byteArray[7]) << 8) + Int(byteArray[6]))
+//        if (M.prevVelX & 0x8000) != 0 {
+//            M.prevVelX = M.prevVelX - (1 << 16) // 65536
+//        }
+//
+//        M.prevVelZ = ((Int(byteArray[9]) << 8) + Int(byteArray[8]))
+//        if (M.prevVelZ & 0x8000) != 0 {
+//            M.prevVelZ = M.prevVelZ - (1 << 16) // 65536
+//        }
+        
+        // current measurements
+        M.PedalAngle = Int(byteArray[5])
+        if (M.PedalAngle & 0x80) != 0 {
+            M.PedalAngle = M.PedalAngle - (1 << 8 ) //256
+        }
+        
+        M.X = Int(byteArray[11])
+        if (M.X & 0x80) != 0 {
+            M.X = M.X - (1 << 8 ) // 256
         }
 
-        F.Z = (Int(byteArray[14]) << 8) + Int(byteArray[13])
-        if (F.Z & 0x8000) != 0 {
-            F.Z = F.Z - (1 <<  16) //65536
+        M.Y = Int(byteArray[12])
+        if (M.Y & 0x80) != 0 {
+            M.Y = M.Y - (1 << 8 ) // 256
         }
 
-        return F
+        M.Z = (Int(byteArray[14]) << 8) + Int(byteArray[13])
+        if (M.Z & 0x8000) != 0 {
+            M.Z = M.Z - (1 <<  16) //65536
+        }
+        
+        M.PedalAngle = Int(byteArray[15])
+        if (M.PedalAngle & 0x80) != 0 {
+            M.PedalAngle = M.PedalAngle - (1 << 8 ) // 256
+        }
+
+//        M.VelX = ((Int(byteArray[17]) << 8) + Int(byteArray[16]))
+//        if (M.VelX & 0x8000) != 0 {
+//            M.VelX = M.VelX - (1 << 16) // 65536
+//        }
+//
+//        M.VelZ = ((Int(byteArray[19]) << 8) + Int(byteArray[18]))
+//        if (M.VelZ & 0x8000) != 0 {
+//            M.VelZ = M.VelZ - (1 << 16) // 65536
+//        }
+
+
+        return M
     }
 }
 

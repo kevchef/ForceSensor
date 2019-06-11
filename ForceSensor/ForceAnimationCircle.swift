@@ -37,7 +37,7 @@ class ForceAnimationCircle: UIView {
         self.position = CGPoint(x: generalCenter.x - size/2, y: generalCenter.y - size/2)
         self.FXY_max = maxFXY
         self.FZ_max = maxFZ
-        self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: self.size, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+        self.circlePath = UIBezierPath(arcCenter: CGPoint(x: 0,y: 0), radius: self.size, startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
         
         super.init(coder: aDecoder)
 
@@ -89,26 +89,26 @@ class ForceAnimationCircle: UIView {
         
     }
     
-    func AnimateCircle(F_queue: [Force]){
+    func AnimateCircle(M_queue: [Measurement]){
         var currentPoint = CGPoint(x:0, y:0)
-        currentPoint.x += CGFloat(F_queue[1].prevX)
-        currentPoint.y += CGFloat(-F_queue[1].prevY)
+        currentPoint.x += CGFloat(M_queue[1].prevX)
+        currentPoint.y += CGFloat(-M_queue[1].prevY)
         var centerPoint = CGPoint(x:0, y:0)
-        centerPoint.x += CGFloat(F_queue[1].X)
-        centerPoint.y += CGFloat(-F_queue[1].Y)
+        centerPoint.x += CGFloat(M_queue[1].X)
+        centerPoint.y += CGFloat(-M_queue[1].Y)
         var endPoint = CGPoint(x:0, y:0)
-        endPoint.x += CGFloat(F_queue[0].prevX)
-        endPoint.y += CGFloat(-F_queue[0].prevY)
+        endPoint.x += CGFloat(M_queue[0].prevX)
+        endPoint.y += CGFloat(-M_queue[0].prevY)
         var nextPoint = CGPoint(x:0, y:0)
-        nextPoint.x += CGFloat(F_queue[0].X)
-        nextPoint.y += CGFloat(-F_queue[0].Y)
+        nextPoint.x += CGFloat(M_queue[0].X)
+        nextPoint.y += CGFloat(-M_queue[0].Y)
         
 //        curvePath(currPoint: currentPoint, centerPoint: centerPoint, endPoint: endPoint, nextPoint: nextPoint)
         moveCircle(endPoint: nextPoint)
         
-        let currScale = CGFloat(F_queue[0].Z)/maxFZ
+        let currScale = CGFloat(M_queue[0].Z)/maxFZ
         changeCircleColor(currScale: currScale)
-        let currSize = (CGFloat(F_queue[0].Z)/maxFZ + 1) * initFrame.width
+        let currSize = (CGFloat(M_queue[0].Z)/maxFZ + 1) * initFrame.width
         changeCircleSize(currSize: currSize)
     }
     

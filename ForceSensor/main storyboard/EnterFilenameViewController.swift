@@ -30,6 +30,7 @@ class EnterFilenameViewController: UIViewController {
         let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
         vc?.path = path! as NSURL
         vc?.RecordButton = RecordButton
+        vc?.recordStartTime = Date()
         present(vc!, animated: true, completion: nil)
         
     }
