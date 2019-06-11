@@ -9,7 +9,7 @@
 import UIKit
 import QuartzCore
 
-@IBDesignable class CirclularPlot: UIView {
+class CirclularPlot: UIView {
     
     /// The total animation duration of the splash animation
     let kAnimationDuration: TimeInterval = 3.0
