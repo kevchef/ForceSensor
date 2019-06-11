@@ -36,9 +36,8 @@ class BLE: NSObject {
     // MARK: - Properties
     //CoreBluetooth properties
     var centralManager: CBCentralManager!
-    var styx_left: CBPeripheral?
-    var styx_right: CBPeripheral?
-    var styx_characteristic: CBCharacteristic?
+    var activeDevice: CBPeripheral?
+    var activeCharacteristic: CBCharacteristic?
     
     //UIAlert properties
     public var deviceAlert: UIAlertController?
@@ -96,16 +95,14 @@ extension BLE: CBCentralManagerDelegate {
         if (peripheral.name != nil) { title = peripheral.name!}
         print("central didDiscover peripheral")
         print(title)
-        let availableDevice = UIAlertAction(title: title , style: .default, handler: {
-            action -> Void in
+//        let availableDevice = UIAlertAction(title: title , style: .default, handler: {
+//            action -> Void in
             print("central - trying to connect")
-        if(title == "STYX_DEMO_LX") {
-            self.styx_left = peripheral //
-            self.styx_left?.delegate = self //
+            activeDevice = peripheral //
+            activeDevice?.delegate = self //
             self.centralManager.connect(peripheral,
                                         options: nil) // change to [CBConnectPeripheralOptionNotifyOnNotificationKey : true]) if you want to be alerted each time exiting the application
-        }
-        })
+//        })
 
     }
     
@@ -115,7 +112,7 @@ extension BLE: CBCentralManagerDelegate {
         print("central is .connected")
 //        activeDevice = peripheral
 //        activeDevice?.delegate = self
-        styx_left?.discoverServices([myDevice.ServiceUUID!])
+        activeDevice?.discoverServices([myDevice.ServiceUUID!])
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -124,7 +121,7 @@ extension BLE: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if peripheral == styx_left {
+        if peripheral == activeDevice {
 //            postBLEConnectionStateNotification(.disconnected)
             print("central.state is .disconnected")
             clearDevices()
@@ -144,7 +141,7 @@ extension BLE: CBPeripheralDelegate {
         guard let services = peripheral.services else { return}
         for thisService in services {
             if thisService.uuid == myDevice.ServiceUUID {
-                styx_left?.discoverCharacteristics(nil, for: thisService)
+                activeDevice?.discoverCharacteristics(nil, for: thisService)
             }
         }
     }
@@ -161,8 +158,8 @@ extension BLE: CBPeripheralDelegate {
         print("peripheral is .connected")
         for thisCharacteristic in characteristics {
             if (thisCharacteristic.uuid == myDevice.CharactersticUUID) {
-                styx_characteristic = thisCharacteristic
-                peripheral.setNotifyValue(true, for: styx_characteristic!)
+                activeCharacteristic = thisCharacteristic
+                peripheral.setNotifyValue(true, for: activeCharacteristic!)
                 
             }
         }
@@ -213,17 +210,17 @@ extension BLE {
     }
     
     func disconnect() {
-        if let activeCharacteristic = styx_characteristic {
-            styx_left?.setNotifyValue(false, for: activeCharacteristic)
+        if let activeCharacteristic = activeCharacteristic {
+            activeDevice?.setNotifyValue(false, for: activeCharacteristic)
         }
-        if let activeDevice = styx_left {
+        if let activeDevice = activeDevice {
             centralManager.cancelPeripheralConnection(activeDevice)
         }
     }
     
     fileprivate func clearDevices() {
-        styx_left = nil
-        styx_characteristic = nil
+        activeDevice = nil
+        activeCharacteristic = nil
         myDevice.ServiceUUID = nil
         myDevice.CharactersticUUID = nil
     }
