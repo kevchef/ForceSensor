@@ -55,6 +55,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GoE-10-BOb" customClass="ForceAnimationCircle" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="67" y="269" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P8B-oq-YZX" customClass="ForceAnimationCircle" customModule="ForceSensor" customModuleProvider="target">
                                 <rect key="frame" x="178" y="464" width="55" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -132,7 +137,8 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="FC" destination="P8B-oq-YZX" id="gBM-x8-Z1t"/>
+                        <outlet property="FCleft" destination="P8B-oq-YZX" id="gBM-x8-Z1t"/>
+                        <outlet property="FCright" destination="GoE-10-BOb" id="5zT-3O-bTl"/>
                         <outlet property="FxLabel" destination="DkL-71-W1m" id="xqO-HU-oTD"/>
                         <outlet property="FyLabel" destination="RRy-mP-4ce" id="jjP-yw-4y3"/>
                         <outlet property="FzLabel" destination="FfR-Jm-Smb" id="vam-Be-XkS"/>

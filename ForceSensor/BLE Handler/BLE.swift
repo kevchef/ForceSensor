@@ -32,11 +32,13 @@ class BLE: NSObject {
     
     // MARK: - BLE shared instance
     static let sharedInstance = BLE()
+    let StartupDate = Date()
     
     // MARK: - Properties
     //CoreBluetooth properties
     var centralManager: CBCentralManager!
-    var activeDevice: CBPeripheral?
+    var styxLeft: CBPeripheral?
+    var styxRight: CBPeripheral?
     var activeCharacteristic: CBCharacteristic?
     
     //UIAlert properties
@@ -50,7 +52,9 @@ class BLE: NSObject {
     }
     
     //ble measurement storage variable
-    var M = Measurement()
+    var M_left = Measurement()
+    var M_right = Measurement()
+
     // MARK: - Init method
     
     private override init() { }
@@ -98,21 +102,35 @@ extension BLE: CBCentralManagerDelegate {
 //        let availableDevice = UIAlertAction(title: title , style: .default, handler: {
 //            action -> Void in
             print("central - trying to connect")
-            activeDevice = peripheral //
-            activeDevice?.delegate = self //
+        if ( title == "STYX_DEMO_LX"){
+            self.styxLeft = peripheral //
+            self.styxLeft?.delegate = self //
             self.centralManager.connect(peripheral,
                                         options: nil) // change to [CBConnectPeripheralOptionNotifyOnNotificationKey : true]) if you want to be alerted each time exiting the application
+        }
+        else if (title == "STYX_DEMO_RX" ){
+            self.styxRight = peripheral //
+            self.styxRight?.delegate = self //
+            self.centralManager.connect(peripheral,
+                                        options: nil)
+        }
+        
 //        })
 
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        centralManager.stopScan()
+        let peripherals = central.retrieveConnectedPeripherals(withServices: [constants.ForcesServiceCBUUID] )
+        if (peripherals.count >= 2) {
+            centralManager.stopScan()
+            print("stop scanning")
+        }
 //        postBLEConnectionStateNotification(.connecting)
         print("central is .connected")
 //        activeDevice = peripheral
 //        activeDevice?.delegate = self
-        activeDevice?.discoverServices([myDevice.ServiceUUID!])
+        styxLeft?.discoverServices([myDevice.ServiceUUID!])
+        styxRight?.discoverServices([myDevice.ServiceUUID!])
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -121,11 +139,17 @@ extension BLE: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        if peripheral == activeDevice {
+        if peripheral == styxLeft {
 //            postBLEConnectionStateNotification(.disconnected)
-            print("central.state is .disconnected")
+            print("central.state is .disconnected from styxLeft")
             clearDevices()
         }
+        if peripheral == styxRight {
+            //            postBLEConnectionStateNotification(.disconnected)
+            print("central.state is .disconnected from styxRight")
+            clearDevices()
+        }
+
     }
 }
 
@@ -141,7 +165,8 @@ extension BLE: CBPeripheralDelegate {
         guard let services = peripheral.services else { return}
         for thisService in services {
             if thisService.uuid == myDevice.ServiceUUID {
-                activeDevice?.discoverCharacteristics(nil, for: thisService)
+                styxLeft?.discoverCharacteristics(nil, for: thisService)
+                styxRight?.discoverCharacteristics(nil, for: thisService)
             }
         }
     }
@@ -167,25 +192,28 @@ extension BLE: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 //        self.createErrorAlert() //printing a lot of Error messages which I cannot interpret
-        print("peripheral  - didUpdateValueFor")
         if error != nil {
             // post notification
             print("something went wrong while didUpdateValueFor - error != nil")
             return
         }
         
-//        guard let dataFromDevice = characteristic.value else { return }
-        
-        if characteristic.uuid == myDevice.CharactersticUUID {
-//            postRecievedDataFromDeviceNotification()
-            self.M = self.MeasurementConversion(from: characteristic)
-            postRecievedDataFromDeviceNotification()
-//            self.onForceMeasurementReceived(F)
-//            print(F)
+        if( peripheral == styxLeft){
+            print("peripheral  - didUpdateValueFor styxLeft")
+            if characteristic.uuid == myDevice.CharactersticUUID {
+                self.M_left = self.MeasurementConversion(from: characteristic)
+                postRecievedDataFromLEFTDeviceNotification()
+            }
         }
-        
-        // else if characteristic.uuid == myDevice.SecondCharacteristicUUID
-        // do something...
+        else if( peripheral == styxRight){
+            print("peripheral  - didUpdateValueFor styxRight")
+            if characteristic.uuid == myDevice.CharactersticUUID {
+                self.M_right = self.MeasurementConversion(from: characteristic)
+                postRecievedDataFromRIGHTDeviceNotification()
+            }
+
+        }
+        else{ print("updated for unknown device") }
     }
 }
 
@@ -194,10 +222,14 @@ extension BLE: CBPeripheralDelegate {
 extension BLE {
     
     // MARK: BLE Methods
-    func getMeasurement() -> Measurement{
-        return self.M
+    func getMleft() -> Measurement{
+        return self.M_left
     }
     
+    func getMright() -> Measurement{
+        return self.M_right
+    }
+
     func startCentralManager() {
         let centralManagerQueue = DispatchQueue(label: "BLE queue", attributes: .concurrent)
         centralManager = CBCentralManager(delegate: self, queue: centralManagerQueue)
@@ -211,15 +243,18 @@ extension BLE {
     
     func disconnect() {
         if let activeCharacteristic = activeCharacteristic {
-            activeDevice?.setNotifyValue(false, for: activeCharacteristic)
+            styxLeft?.setNotifyValue(false, for: activeCharacteristic)
+            styxRight?.setNotifyValue(false, for: activeCharacteristic)
+
         }
-        if let activeDevice = activeDevice {
+        if let activeDevice = styxLeft {
             centralManager.cancelPeripheralConnection(activeDevice)
         }
     }
     
     fileprivate func clearDevices() {
-        activeDevice = nil
+        styxLeft = nil
+        styxRight = nil
         activeCharacteristic = nil
         myDevice.ServiceUUID = nil
         myDevice.CharactersticUUID = nil
@@ -253,8 +288,12 @@ extension BLE {
 //    }
     
     
-    fileprivate func postRecievedDataFromDeviceNotification() {
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "BLE_ForceMeasurementUpdated"), object: self, userInfo: nil)
+    fileprivate func postRecievedDataFromLEFTDeviceNotification() {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "BLE_LEFTForceMeasurementUpdated"), object: self, userInfo: nil)
+    }
+    
+    fileprivate func postRecievedDataFromRIGHTDeviceNotification() {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "BLE_RIGHTForceMeasurementUpdated"), object: self, userInfo: nil)
     }
 
     private func MeasurementConversion(from characteristic: CBCharacteristic) -> Measurement {

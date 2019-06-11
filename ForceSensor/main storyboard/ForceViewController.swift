@@ -35,14 +35,16 @@ struct outputData{
     
 class ForceViewController: UIViewController {
     
-    var Measurement_queue: [Measurement] = [Measurement(),Measurement(),Measurement()]
+    var Measurement_queue_left: [Measurement] = [Measurement(),Measurement(),Measurement()]
+    var Measurement_queue_right: [Measurement] = [Measurement(),Measurement(),Measurement()]
 
     var centralManager: CBCentralManager!
     var PedalPeripheral: CBPeripheral!
     
     var recordIndex = Int(-1)
     var recordStartTime = Date()
-    var out = outputData()
+    var outLeft = outputData()
+    var outRight = outputData()
     var writeToCSV = false
     var filename = "not changed yet"
     var path = NSURL(fileURLWithPath: NSTemporaryDirectory())
@@ -54,16 +56,18 @@ class ForceViewController: UIViewController {
     
 //    @IBOutlet weak var Test: TestCircle!
     @IBOutlet weak var RecordButton: RecordButton!
-    @IBOutlet weak var FC: ForceAnimationCircle!
+    @IBOutlet weak var FCleft: ForceAnimationCircle!
+    @IBOutlet weak var FCright: ForceAnimationCircle!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-//        centralManager = CBCentralManager(delegate: self, queue: nil)
 //        self.present(BLE.sharedInstance.deviceSheet!, animated: true, completion: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onForceMeasurementReceived),
-                                               name: .BLE_ForceMeasurementUpdated, object: BLE.sharedInstance)
-//        Test.animate()
+        NotificationCenter.default.addObserver(self, selector: #selector(onLEFTForceMeasurementReceived),
+                                               name: .BLE_LEFTForceMeasurementUpdated, object: BLE.sharedInstance)
+        NotificationCenter.default.addObserver(self, selector: #selector(onRIGHTForceMeasurementReceived),
+                                               name: .BLE_RIGHTForceMeasurementUpdated, object: BLE.sharedInstance)
         if(writeToCSV == true){
             RecordButton.switchState()
         }
@@ -71,44 +75,78 @@ class ForceViewController: UIViewController {
     
     
     
-    @objc private func onForceMeasurementReceived(notification: Notification) {
-        let M = BLE.sharedInstance.getMeasurement()
+    @objc private func onLEFTForceMeasurementReceived(notification: Notification) {
+        let M = BLE.sharedInstance.getMleft()
 //        print("force measurement received")
         DispatchQueue.main.async { // Correct
             self.FxLabel.text = String((M.X+M.prevX)/2)
             self.FyLabel.text = String((M.Y+M.prevY)/2)
             self.FzLabel.text = String((M.Z+M.prevZ)/2)
 
-            self.Measurement_queue[2] = self.Measurement_queue[1]
-            self.Measurement_queue[1] = self.Measurement_queue[0]
-            self.Measurement_queue[0] = M
+            self.Measurement_queue_left[2] = self.Measurement_queue_left[1]
+            self.Measurement_queue_left[1] = self.Measurement_queue_left[0]
+            self.Measurement_queue_left[0] = M
         
-            self.FC.AnimateCircle(M_queue: self.Measurement_queue)
+            self.FCleft.AnimateCircle(M_queue: self.Measurement_queue_left)
             
             if( self.writeToCSV == true ){
 //                self.CSVData += "\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n"
 //                print("\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n")
                 
-                self.recordIndex = self.recordIndex + 1
-                self.out.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
-                self.out.X.append(M.prevX)
-                self.out.Y.append(M.prevX)
-                self.out.Z.append(M.prevX)
+//                self.recordIndex = self.recordIndex + 1
+                self.outLeft.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.outLeft.X.append(M.prevX)
+                self.outLeft.Y.append(M.prevX)
+                self.outLeft.Z.append(M.prevX)
                 
-                self.recordIndex = self.recordIndex + 1
-                self.out.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
-                self.out.X.append(M.X)
-                self.out.Y.append(M.Y)
-                self.out.Z.append(M.Z)
+//                self.recordIndex = self.recordIndex + 1
+                self.outLeft.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.outLeft.X.append(M.X)
+                self.outLeft.Y.append(M.Y)
+                self.outLeft.Z.append(M.Z)
             }
         }
     }
+    
+    @objc private func onRIGHTForceMeasurementReceived(notification: Notification) {
+        let M = BLE.sharedInstance.getMright()
+        //        print("force measurement received")
+        DispatchQueue.main.async { // Correct
+//            self.FxLabel.text = String((M.X+M.prevX)/2)
+//            self.FyLabel.text = String((M.Y+M.prevY)/2)
+//            self.FzLabel.text = String((M.Z+M.prevZ)/2)
+            
+            self.Measurement_queue_right[2] = self.Measurement_queue_right[1]
+            self.Measurement_queue_right[1] = self.Measurement_queue_right[0]
+            self.Measurement_queue_right[0] = M
+            
+            self.FCright.AnimateCircle(M_queue: self.Measurement_queue_right)
+            
+            if( self.writeToCSV == true ){
+                //                self.CSVData += "\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n"
+                //                print("\(M.prevX),\(M.prevY),\(M.prevZ),\(M.X),\(M.Y),\(M.Z)\n")
+                
+//                self.recordIndex = self.recordIndex + 1
+                self.outRight.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.outRight.X.append(M.prevX)
+                self.outRight.Y.append(M.prevX)
+                self.outRight.Z.append(M.prevX)
+                
+//                self.recordIndex = self.recordIndex + 1
+                self.outRight.Time.append( Float(Date().timeIntervalSince(self.recordStartTime)) )
+                self.outRight.X.append(M.X)
+                self.outRight.Y.append(M.Y)
+                self.outRight.Z.append(M.Z)
+            }
+        }
+    }
+
     
     @IBAction func ShowSessionsPlot(_ sender: Any) {
         if( self.writeToCSV == false ){
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "SessionPlot") as? SessionPlotViewController
-            vc?.data = out
+            vc?.data = outLeft
             present(vc!, animated: true, completion: nil)
         }
         else {
@@ -132,8 +170,8 @@ class ForceViewController: UIViewController {
         } else {
             writeToCSV = false;
             do {
-                for i in 0...out.Time.count-1{
-                    self.CSVData += "\(out.Time[i]),\(out.X[i]),\(out.Y[i]),\(out.Z[i])\n"
+                for i in 0...outLeft.Time.count-1{
+                    self.CSVData += "\(outLeft.Time[i]),\(outLeft.X[i]),\(outLeft.Y[i]),\(outLeft.Z[i])\n"
                 }
                 
                 try CSVData.write(to: path as URL, atomically: true, encoding: String.Encoding.utf8)
