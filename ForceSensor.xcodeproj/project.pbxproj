@@ -21,6 +21,7 @@
 		0A86A8DA22986D3700611D1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A86A8D822986D3700611D1F /* LaunchScreen.storyboard */; };
 		0A86A8E522986D3700611D1F /* ForceSensorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8E422986D3700611D1F /* ForceSensorTests.swift */; };
 		0A86A8F022986D3700611D1F /* ForceSensorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A86A8EF22986D3700611D1F /* ForceSensorUITests.swift */; };
+		0AB612F122B14BAB003FD21C /* DevelopmentPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB612F022B14BAB003FD21C /* DevelopmentPlot.swift */; };
 		0AC4DAB622AE90EE000DADC6 /* SessionPlotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */; };
 		0AC4DAB822AE9A90000DADC6 /* CirclularPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */; };
 		0AE5A83E22A6666000817EBA /* ForceAnimationCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */; };
@@ -64,6 +65,7 @@
 		0A86A8EB22986D3700611D1F /* ForceSensorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForceSensorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A86A8EF22986D3700611D1F /* ForceSensorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorUITests.swift; sourceTree = "<group>"; };
 		0A86A8F122986D3700611D1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0AB612F022B14BAB003FD21C /* DevelopmentPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DevelopmentPlot.swift; path = ForceSensor/DevelopmentPlot.swift; sourceTree = SOURCE_ROOT; };
 		0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPlotViewController.swift; sourceTree = "<group>"; };
 		0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclularPlot.swift; sourceTree = "<group>"; };
 		0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceAnimationCircle.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				0A1EC23622A90DA900A104E7 /* main storyboard */,
 				0A7ED10C22A7EF6200702ECF /* TestCircle.swift */,
 				0AE5A83D22A6666000817EBA /* ForceAnimationCircle.swift */,
+				0AB612F022B14BAB003FD21C /* DevelopmentPlot.swift */,
 				0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */,
 				0A54821022A7E88A004D98E0 /* RecordButton.swift */,
 				0A2126B322A537AB006ABBD5 /* Common.swift */,
@@ -302,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AB612F122B14BAB003FD21C /* DevelopmentPlot.swift in Sources */,
 				0A86A8D222986D3600611D1F /* ForceViewController.swift in Sources */,
 				0AC4DAB622AE90EE000DADC6 /* SessionPlotViewController.swift in Sources */,
 				0A2126B422A537AB006ABBD5 /* Common.swift in Sources */,
