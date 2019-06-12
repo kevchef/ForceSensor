@@ -30,7 +30,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7IZ-Rh-3V3" customClass="CirclularPlot" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="67" y="248" width="240" height="128"/>
+                                <rect key="frame" x="22" y="69" width="331" height="496"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -45,7 +45,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1PH-Vn-JOh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="CfM-DO-80R" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="44" y="-721"/>
+            <point key="canvasLocation" x="44" y="-721.88905547226398"/>
         </scene>
         <!--Force View Controller-->
         <scene sceneID="tne-QT-ifu">

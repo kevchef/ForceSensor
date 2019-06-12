@@ -303,9 +303,6 @@ extension BLE {
         
         // previous Measurements
         M.prevCrankAngle = Int(byteArray[0])
-        if (M.prevCrankAngle & 0x80) != 0 {
-            M.prevCrankAngle = M.prevCrankAngle - (1 << 8 ) //256
-        }
 
         M.prevX = Int(byteArray[1])
         if (M.prevX & 0x80) != 0 {
@@ -338,10 +335,7 @@ extension BLE {
 //        }
         
         // current measurements
-        M.PedalAngle = Int(byteArray[5])
-        if (M.PedalAngle & 0x80) != 0 {
-            M.PedalAngle = M.PedalAngle - (1 << 8 ) //256
-        }
+        M.CrankAngle = Int(byteArray[10])
         
         M.X = Int(byteArray[11])
         if (M.X & 0x80) != 0 {

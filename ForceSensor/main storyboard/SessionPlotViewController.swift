@@ -11,11 +11,13 @@ import UIKit
 class SessionPlotViewController: UIViewController {
     
     var data = outputData()
+    var avgPoints: [CGFloat]!
     @IBOutlet weak var SessionPlotCirclular: CirclularPlot!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        avgPoints = [140,170,200,130,70,40,60,80]
+        SessionPlotCirclular.setup(avgP: avgPoints)
         // Do any additional setup after loading the view.
     }
     

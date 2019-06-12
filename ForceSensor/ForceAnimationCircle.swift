@@ -31,7 +31,7 @@ class ForceAnimationCircle: UIView {
 
     
     required init?(coder aDecoder: NSCoder) {
-        self.size = initFrame.width
+        self.size = initFrame.width/2.0
         self.color = UIColor.green
 //            UIColor(displayP3Red: 0.2, green: 1.0 , blue: 0.2, alpha: 1.0) as! CGColor
         self.position = CGPoint(x: generalCenter.x - size/2, y: generalCenter.y - size/2)
