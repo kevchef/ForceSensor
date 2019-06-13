@@ -30,7 +30,12 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7IZ-Rh-3V3" customClass="CirclularPlot" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="22" y="69" width="331" height="496"/>
+                                <rect key="frame" x="95" y="69" width="184" height="186"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FgN-Hr-xyY" customClass="DevelopmentPlot" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="381" width="375" height="286"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -39,6 +44,7 @@
                         <viewLayoutGuide key="safeArea" id="Tl1-nR-lGz"/>
                     </view>
                     <connections>
+                        <outlet property="ProfileDevelopmentPlot" destination="FgN-Hr-xyY" id="jam-03-yXT"/>
                         <outlet property="SessionPlotCirclular" destination="7IZ-Rh-3V3" id="fTG-5c-BIv"/>
                     </connections>
                 </viewController>

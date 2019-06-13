@@ -20,7 +20,7 @@ class CirclularPlot: UIView {
     private var maxRadius = [CGFloat]()
     private var avgRadius = [CGFloat]()
     private var minRadius = [CGFloat]()
-
+    
     private var maxPath = UIBezierPath()
     private var avgPath = UIBezierPath()
     private var minPath = UIBezierPath()
@@ -35,21 +35,21 @@ class CirclularPlot: UIView {
     var maxPoints : [CGFloat] = [140,170,200,130,70,40,60,80]
     var avgPoints : [CGFloat] = [120,140,180,110,60,35,55,60]
     var minPoints : [CGFloat] = [100,110,150,105,55,30,53,55]
-
+    
     
     override init(frame: CGRect) {
         
         super.init(frame: frame)
         
-//        self.setup()
+        //        self.setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-//        self.setup()
+        //        self.setup()
     }
-
+    
     func setup(minP: [CGFloat]?, avgP: [CGFloat]?, maxP: [CGFloat]?){
         self.relativeCenter = CGPoint(x: frame.width/2, y: frame.height/2)
         self.size = min(frame.width,frame.height)/2
@@ -58,32 +58,47 @@ class CirclularPlot: UIView {
         self.avgPoints = avgP ?? self.avgPoints
         self.maxPoints = maxP ?? self.maxPoints
         
+        self.minPoints = self.minPoints.map(abs)
+        self.avgPoints = self.avgPoints.map(abs)
+        self.maxPoints = self.maxPoints.map(abs)
+        
+        print("minPoints: \(self.minPoints)")
+        
         let maxP = self.size/CGFloat(self.maxPoints.max()!)
         self.maxRadius = maxPoints.map{$0 * maxP}
         self.avgRadius = avgPoints.map{$0 * maxP}
         self.minRadius = minPoints.map{$0 * maxP}
-
+        
         self.maxPath = UIBezierPath()
+        self.avgPath = UIBezierPath()
+        self.minPath = UIBezierPath()
+        
+        let testlayer = CAShapeLayer()
+        testlayer.path = UIBezierPath(arcCenter: self.relativeCenter, radius: self.size, startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true).cgPath
+        testlayer.fillColor = UIColor.black.cgColor
+        self.layer.addSublayer(testlayer)
+
+        
         var startAngleMax = Double(0.0)
         var endAngleMax = Double.pi/4.0
         var startAngleAvg = Double.pi/80.0
         var endAngleAvg = Double.pi/4.0-Double.pi/80.0
         var startAngleMin = Double.pi/40.0
         var endAngleMin = Double.pi/4.0-Double.pi/40.0
-
-
+        
+        
         for i in 0...maxPoints.count-1 {
             self.maxPath.addArc(withCenter: self.relativeCenter, radius: self.maxRadius[i], startAngle: CGFloat(startAngleMax) , endAngle: CGFloat(endAngleMax), clockwise: true)
             self.avgPath.addArc(withCenter: self.relativeCenter, radius: self.avgRadius[i], startAngle: CGFloat(startAngleAvg) , endAngle: CGFloat(endAngleAvg), clockwise: true)
             self.minPath.addArc(withCenter: self.relativeCenter, radius: self.minRadius[i], startAngle: CGFloat(startAngleMin) , endAngle: CGFloat(endAngleMin), clockwise: true)
-//            print("start: \(startAngleAvg), end: \(endAngleAvg)")
-
+            //            print("start: \(startAngleAvg), end: \(endAngleAvg)")
+            
             startAngleAvg = endAngleAvg
             endAngleAvg += Double.pi/40.0
             startAngleMin = endAngleMin
             endAngleMin += Double.pi/20.0
             
-//            self.maxPath.addArc(withCenter: CGPoint(x:0,y:0) , radius: CGFloat(1.0), startAngle: CGFloat(startAngleMax) , endAngle: CGFloat(endAngleMax), clockwise: true)
+            //            self.maxPath.addArc(withCenter: CGPoint(x:0,y:0) , radius: CGFloat(1.0), startAngle: CGFloat(startAngleMax) , endAngle: CGFloat(endAngleMax), clockwise: true)
             self.avgPath.addArc(withCenter: self.relativeCenter, radius: self.avgRadius.min()!/2, startAngle: CGFloat(startAngleAvg) , endAngle: CGFloat(endAngleAvg), clockwise: true)
             self.minPath.addArc(withCenter: self.relativeCenter, radius: self.minRadius.min()!/2, startAngle: CGFloat(startAngleMin) , endAngle: CGFloat(endAngleMin), clockwise: true)
             
@@ -99,33 +114,34 @@ class CirclularPlot: UIView {
         self.avgPath.close()
         self.minPath.close()
         
-//        // add circle as shapelayer - sublayer of main layer
+        //        // add circle as shapelayer - sublayer of main layer
         self.maxShape.path = self.maxPath.cgPath
         self.maxShape.fillColor = UIColor(named: "CircularPlot1")?.cgColor
-//        self.maxLayer.strokeColor = UIColor.blue.cgColor
-//        self.maxLayer.lineWidth = 20.0
+        //        self.maxLayer.strokeColor = UIColor.blue.cgColor
+        //        self.maxLayer.lineWidth = 20.0
         self.layer.addSublayer(maxLayer)
         self.maxLayer.addSublayer(maxShape)
         
-        addAnimation(delay: 0.5, Layer: self.maxLayer)
+        //        addAnimation(delay: 0.5, Layer: self.maxLayer)
         
         self.avgShape.path = self.avgPath.cgPath
         self.avgShape.fillColor = UIColor(named: "CircularPlot2")?.cgColor
-//        self.avgLayer.strokeColor = UIColor.red.cgColor
-//        self.avgLayer.lineWidth = 10.0
+        //        self.avgLayer.strokeColor = UIColor.red.cgColor
+        //        self.avgLayer.lineWidth = 10.0
         self.layer.addSublayer(avgLayer)
         self.avgLayer.addSublayer(avgShape)
         
-        addAnimation(delay: 1.0, Layer: avgLayer)
+        //        addAnimation(delay: 1.0, Layer: avgLayer)
         
         self.minShape.path = self.minPath.cgPath
         self.minShape.fillColor = UIColor(named: "CircularPlot3")?.cgColor
         self.layer.addSublayer(minLayer)
         self.minLayer.addSublayer(minShape)
-
-        addAnimation(delay: 1.5, Layer: minLayer)
-
-
+        
+        //        addAnimation(delay: 1.5, Layer: minLayer)
+        
+        print("self.frame \(self.frame)")
+        
     }
     
     func addAnimation(delay: Double, Layer: CALayer){
