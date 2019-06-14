@@ -12,16 +12,22 @@ class SessionPlotViewController: UIViewController {
     
     var data = outputData()
     var avgPoints: [CGFloat]!
-    @IBOutlet weak var SessionPlotCirclular: CirclularPlot!
-    @IBOutlet weak var ProfileDevelopmentPlot: DevelopmentPlot!
+    @IBOutlet weak var SessionPlotCirclular: CrankBinPlot!
+    @IBOutlet weak var BarChart: BarChart!
+    @IBOutlet weak var Histo: Histogramm!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         var maxPoints : [Int] = [140,170,200,130,70,40,60,80]
         var avgPoints : [Int] = [120,140,180,110,60,35,55,60]
         var minPoints : [Int] = [100,110,150,105,55,30,53,55]
-        SessionPlotCirclular.setup(minP: minPoints.map{CGFloat($0)}, avgP: avgPoints.map{CGFloat($0)}, maxP: maxPoints.map{CGFloat($0)})
-        ProfileDevelopmentPlot.setup()
+        var stdPoints : [Int] = [10,15,10,15,25,30,13,20]
+        SessionPlotCirclular.setup(minP: minPoints.map{CGFloat($0)}, avgP: avgPoints.map{CGFloat($0)}, maxP: maxPoints.map{CGFloat($0)}, stdP: stdPoints.map{CGFloat($0)})
+        var barentries = [100, 80, 60, 40 , 20, 40, 80, 20]
+        BarChart.setup(barentries: barentries.map{CGFloat($0)})
+        var histoentries = [10, 20, 30, 60 , 80, 70, 30, 30, 20, 10]
+        Histo.setup(barentries: histoentries.map{CGFloat($0)})
+
         // Do any additional setup after loading the view.
     }
     
