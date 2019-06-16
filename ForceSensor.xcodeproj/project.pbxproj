@@ -27,6 +27,7 @@
 		0AB4B17E22B286A100255E3C /* CrankBinPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4B17D22B286A100255E3C /* CrankBinPlot.swift */; };
 		0AB4B18022B39F1500255E3C /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4B17F22B39F1500255E3C /* BarChart.swift */; };
 		0AB4B18222B3F79500255E3C /* Histogramm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4B18122B3F79500255E3C /* Histogramm.swift */; };
+		0AB4B19322B5626A00255E3C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4B19122B5623700255E3C /* ProgressBar.swift */; };
 		0AB612F122B14BAB003FD21C /* DevelopmentPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB612F022B14BAB003FD21C /* DevelopmentPlot.swift */; };
 		0AC4DAB622AE90EE000DADC6 /* SessionPlotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */; };
 		0AC4DAB822AE9A90000DADC6 /* CirclularPlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */; };
@@ -77,6 +78,7 @@
 		0AB4B17D22B286A100255E3C /* CrankBinPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrankBinPlot.swift; sourceTree = "<group>"; };
 		0AB4B17F22B39F1500255E3C /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
 		0AB4B18122B3F79500255E3C /* Histogramm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Histogramm.swift; sourceTree = "<group>"; };
+		0AB4B19122B5623700255E3C /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProgressBar.swift; path = ForceSensor/ProgressBar.swift; sourceTree = SOURCE_ROOT; };
 		0AB612F022B14BAB003FD21C /* DevelopmentPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DevelopmentPlot.swift; path = ForceSensor/DevelopmentPlot.swift; sourceTree = SOURCE_ROOT; };
 		0AC4DAB522AE90EE000DADC6 /* SessionPlotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPlotViewController.swift; sourceTree = "<group>"; };
 		0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclularPlot.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				0AC4DAB722AE9A90000DADC6 /* CirclularPlot.swift */,
 				0AB4B17D22B286A100255E3C /* CrankBinPlot.swift */,
 				0A54821022A7E88A004D98E0 /* RecordButton.swift */,
+				0AB4B19122B5623700255E3C /* ProgressBar.swift */,
 				0A2126B322A537AB006ABBD5 /* Common.swift */,
 				0A86A8D622986D3700611D1F /* Assets.xcassets */,
 				0A86A8D822986D3700611D1F /* LaunchScreen.storyboard */,
@@ -349,6 +352,7 @@
 				0AC4DAB822AE9A90000DADC6 /* CirclularPlot.swift in Sources */,
 				0A6BF13822AA6C0D006F9ED3 /* Constants.swift in Sources */,
 				0AB4B17E22B286A100255E3C /* CrankBinPlot.swift in Sources */,
+				0AB4B19322B5626A00255E3C /* ProgressBar.swift in Sources */,
 				0AB4B17722B267A000255E3C /* BasicBarChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

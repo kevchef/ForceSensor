@@ -12,9 +12,12 @@ class SessionPlotViewController: UIViewController {
     
     var data = outputData()
     var avgPoints: [CGFloat]!
+    var index = 0
+    var good = true;
     @IBOutlet weak var SessionPlotCirclular: CrankBinPlot!
     @IBOutlet weak var BarChart: BarChart!
     @IBOutlet weak var Histo: Histogramm!
+    @IBOutlet weak var ProgressB: ProgressBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +30,17 @@ class SessionPlotViewController: UIViewController {
         BarChart.setup(barentries: barentries.map{CGFloat($0)})
         var histoentries = [10, 20, 30, 60 , 80, 70, 30, 30, 20, 10]
         Histo.setup(barentries: histoentries.map{CGFloat($0)})
-
+        ProgressB.setup()
+        
+        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (timer) in
+            self.index += 1
+            if (self.index % 30 == 0){
+                self.good = !self.good
+                print(self.good)
+            }
+            self.ProgressB.update(good: self.good)
+        }
+        timer.fire()
         // Do any additional setup after loading the view.
     }
     

@@ -29,20 +29,27 @@
                                     <action selector="ShowSessionsPlot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bke-3U-yl0"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7IZ-Rh-3V3" customClass="CrankBinPlot" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="94" y="53" width="186" height="170"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vvk-6v-lM1" customClass="Histogramm" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="43" y="422" width="288" height="184"/>
+                                <rect key="frame" x="43" y="397" width="288" height="184"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CDJ-99-MNp" customClass="BarChart" customModule="ForceSensor" customModuleProvider="target">
-                                <rect key="frame" x="43" y="240" width="288" height="186"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7IZ-Rh-3V3" customClass="CrankBinPlot" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="94" y="62" width="186" height="170"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kFE-Iw-QUd" customClass="ProgressBar" customModule="ForceSensor" customModuleProvider="target">
+                                <rect key="frame" x="154" y="92" width="67" height="511"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CDJ-99-MNp" customClass="BarChart" customModule="ForceSensor" customModuleProvider="target">
+                                        <rect key="frame" x="-111" y="145" width="288" height="186"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -51,6 +58,7 @@
                     <connections>
                         <outlet property="BarChart" destination="CDJ-99-MNp" id="ZKZ-ua-sWJ"/>
                         <outlet property="Histo" destination="vvk-6v-lM1" id="FyM-Z6-MgG"/>
+                        <outlet property="ProgressB" destination="kFE-Iw-QUd" id="Cvp-BE-ftu"/>
                         <outlet property="SessionPlotCirclular" destination="7IZ-Rh-3V3" id="fTG-5c-BIv"/>
                     </connections>
                 </viewController>
